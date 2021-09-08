@@ -277,7 +277,7 @@ abstract class AllItemsManager {
 
 /** Manages a local item instance */
 class SingleItemManager {
-  static const String _FILE_EXTENTION = ".itm";
+  static const String FILE_EXTENTION = ".itm";
   static const String ITEM_TYPE_KEY = "itemType";
   static const String ITEM_ID_KEY = "itemID";
   static const String ATTRIBUTES_KEY = "attributes";
@@ -482,7 +482,7 @@ class SingleItemManager {
 
   /** Generates the file name for the given item */
   static String _getItemFileName({required String itemID}) {
-    return itemID + _FILE_EXTENTION;
+    return itemID + FILE_EXTENTION;
   }
 }
 
