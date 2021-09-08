@@ -1,4 +1,4 @@
-library tke_flutter_core_v_3_0;
+library tke_item_store;
 
 // Imports
 import 'dart:async' as D_Async;

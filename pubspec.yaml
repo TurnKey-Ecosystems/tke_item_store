@@ -10,13 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  
-  cupertino_icons: ^1.0.2  
-  http: any
+    
   quiver: ^3.0.1
-  path_provider: ^2.0.2
-  flutter_mailer: ^2.0.0
-  flutter_share: ^2.0.0
 
 dev_dependencies:
   flutter_test:

@@ -15,8 +15,6 @@ import 'package:flutter/gestures.dart' as F_Gestures;
 import 'package:path/path.dart' as Path;
 import 'package:quiver/core.dart' as Quiver;
 import 'package:quiver/iterables.dart' as Quiver;
-import 'package:flutter_share/flutter_share.dart' as Sharer;
-import 'package:flutter_mailer/flutter_mailer.dart' as Mailer;
 
 // Managed by tke-cli DO NOT TOUCH
 // tke-cli-begin-tag: "parts"

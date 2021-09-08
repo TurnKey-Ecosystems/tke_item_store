@@ -1,4 +1,4 @@
-part of tke_flutter_core_v_3_0;
+part of tke_item_store;
 
 
 // Provides a control pannel for an instance of a property type attribute
