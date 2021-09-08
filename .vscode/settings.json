@@ -1,0 +1,10 @@
+{
+	"filewatcher.commands": [
+		{
+			"match": "lib",
+			"isAsync": true,
+			"cmd": "tke compile -t \"projectparts\" \"${workspaceRoot}\" \"${file}\"",
+			"event": "onFolderChange"
+		}		
+	]
+}
