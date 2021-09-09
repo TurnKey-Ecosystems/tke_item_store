@@ -245,14 +245,14 @@ abstract class AllItemsManager {
 
 
   /** Generate a new itemID */
-  static late final String _deviceID;
-  static late final int Function({
+  static String _deviceID = '';
+  static int Function({
     required String itemType,
-  }) _requestNewItemIndex;
+  })? _requestNewItemIndex = null;
   static String requestNewItemID({
     required String itemType,
   }) {
-    int itemIndex = _requestNewItemIndex(itemType: itemType);
+    int itemIndex = _requestNewItemIndex!(itemType: itemType);
     String itemID =
       itemType
       + ITEM_ID_DIVIDER
