@@ -3,7 +3,6 @@ part of tke_item_store;
 // Models an attribute instance
 abstract class Attribute implements OnAfterChange {
   // The attribute instance that this Attribute models
-  @F_UI.protected
   late final InstanceOfAttribute attributeInstance;
 
 

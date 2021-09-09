@@ -95,14 +95,10 @@ abstract class AllItemsManager {
       _itemInstances[itemInstance.itemID] = itemInstance;
 
       // Record the itemId under its item type
-      F_UI.debugPrint("itemType: ${itemInstance.itemType}");
       if (_itemIDsForEachItemType[itemInstance.itemType] == null) {
         _itemIDsForEachItemType[itemInstance.itemType] = {};
       }
       _itemIDsForEachItemType[itemInstance.itemType]!.add(itemInstance.itemID);
-    }
-    for (String itemType in _itemIDsForEachItemType.keys) {
-      F_UI.debugPrint("$itemType: ${D_Convert.jsonEncode(List.from(_itemIDsForEachItemType[itemType]!))}");
     }
   }
 

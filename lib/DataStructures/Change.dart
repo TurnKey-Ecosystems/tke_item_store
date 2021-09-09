@@ -61,7 +61,6 @@ abstract class Change {
       this.changeTimePosix = json[_CHANGE_TIME_POSIX_KEY];
 
   /** Covnerts this change log to a json */
-  @F_UI.mustCallSuper
   Map<String, dynamic> toJson() {
     return {
       _API_VERSION_KEY: apiVersion,

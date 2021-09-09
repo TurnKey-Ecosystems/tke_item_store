@@ -7,11 +7,6 @@ import 'dart:convert' as D_Convert;
 import 'dart:developer' as D_Dev;
 import 'dart:math' as D_Math;
 import 'dart:typed_data' as D_Data;
-import 'dart:ui' as D_UI;
-import 'package:flutter/material.dart' as F_UI;
-import 'package:flutter/foundation.dart' as F_Foundation;
-import 'package:flutter/services.dart' as F_Services;
-import 'package:flutter/gestures.dart' as F_Gestures;
 import 'package:path/path.dart' as Path;
 import 'package:quiver/core.dart' as Quiver;
 import 'package:quiver/iterables.dart' as Quiver;
@@ -19,8 +14,3 @@ import 'package:quiver/iterables.dart' as Quiver;
 // Managed by tke-cli DO NOT TOUCH
 // tke-cli-begin-tag: "parts"
 // tke-cli-end-tag: "parts"
-
-// Global functions
-void log(String message) {
-  F_UI.debugPrint(message);
-}

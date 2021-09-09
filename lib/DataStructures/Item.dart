@@ -2,7 +2,6 @@ part of tke_item_store;
 
 
 // Acts a a control pannel for an item instance
-@F_UI.immutable
 abstract class Item {
   // We can't require subtypes to provide an itemType, so this is the best we can do.
   String get itemType;
@@ -31,7 +30,6 @@ abstract class Item {
   
 
   /// Item subtypes should override this
-  @F_UI.protected
   List<Attribute> getAllAttributes();
   List<Attribute> _getAllAttributes() {
     List<Attribute> allAttributes = getAllAttributes();
@@ -91,7 +89,6 @@ abstract class Item {
 
 
   /** Permanently delete this item */
-  @F_UI.mustCallSuper
   void delete() {
     List<Change> changes = [];
 

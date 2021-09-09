@@ -8,7 +8,6 @@ import 'dart:convert' as D_Convert;
 import 'dart:developer' as D_Dev;
 import 'dart:math' as D_Math;
 import 'dart:typed_data' as D_Data;
-import 'package:flutter/material.dart' as F_UI;
 import 'package:quiver/core.dart' as Quiver;
 
 // Managed by tke-cli DO NOT TOUCH
@@ -26,8 +25,3 @@ part './Utilities/BasicValueWrapper.dart';
 part './Utilities/Event.dart';
 part './Utilities/OnAfterChange.dart';
 // tke-cli-end-tag: "parts"
-
-// Global functions
-void log(String message) {
-  F_UI.debugPrint(message);
-}
