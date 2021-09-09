@@ -9,7 +9,7 @@ class AttributeItemSet<ItemClassType extends Item> extends Attribute {
   // Allow devs to access the items in this set
   Set<ItemClassType> get allItems {
     Set<ItemClassType> allItems = {};
-    for (String itemID in attributeInstance.getAllValuesAsSet<String>()) {
+    for (String itemID in attributeInstance!.getAllValuesAsSet<String>()) {
       allItems.add(
         getItemFromItemID(itemID),
       );
@@ -24,14 +24,14 @@ class AttributeItemSet<ItemClassType extends Item> extends Attribute {
       changes: [
         ChangeAttributeAddValue(
           changeApplicationDepth: syncDepth,
-          itemID: attributeInstance.itemID,
+          itemID: attributeInstance!.itemID,
           attributeKey: attributeKey,
           value: newItem.itemID,
         ),
       ],
     );
     newItem._containedIn.add(
-      attributeInstance.itemID
+      attributeInstance!.itemID
       + Item._CONTAINED_IN_DELIMITER
       + attributeKey,
     );
@@ -43,7 +43,7 @@ class AttributeItemSet<ItemClassType extends Item> extends Attribute {
       changes: [
         ChangeAttributeRemoveValue(
           changeApplicationDepth: syncDepth,
-          itemID: attributeInstance.itemID,
+          itemID: attributeInstance!.itemID,
           attributeKey: attributeKey,
           value: itemToRemove.itemID,
         ),
@@ -61,13 +61,13 @@ class AttributeItemSet<ItemClassType extends Item> extends Attribute {
   // This will setup a listener to delete all contents when the parent item is deleted
   void _listenToOnDeleteAndDeleteContents() {
     // Ensure a slot exists for this item
-    if (!_deleteContentsOnItemDeleteListeners.containsKey(attributeInstance.itemID)) {
-      _deleteContentsOnItemDeleteListeners[attributeInstance.itemID] = {};
+    if (!_deleteContentsOnItemDeleteListeners.containsKey(attributeInstance!.itemID)) {
+      _deleteContentsOnItemDeleteListeners[attributeInstance!.itemID] = {};
     }
 
     // Add a listenner if there is none for this attribute
     Map<String, void Function()> onDeleteItemEntry =
-      _deleteContentsOnItemDeleteListeners[attributeInstance.itemID]!;
+      _deleteContentsOnItemDeleteListeners[attributeInstance!.itemID]!;
     if (!onDeleteItemEntry.containsKey(attributeKey)) {
       onDeleteItemEntry[attributeKey] = () {
         // Delete all of this sets contents
@@ -78,7 +78,7 @@ class AttributeItemSet<ItemClassType extends Item> extends Attribute {
         // The item will be deleted, so their is no sense is listening any more
         onDeleteItemEntry.remove(attributeKey);
       };
-      AllItemsManager.getItemInstance(attributeInstance.itemID)!.onDelete.addListener(onDeleteItemEntry[attributeKey]);
+      AllItemsManager.getItemInstance(attributeInstance!.itemID)!.onDelete.addListener(onDeleteItemEntry[attributeKey]);
     }
   }
 

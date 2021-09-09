@@ -8,7 +8,7 @@ abstract class _AttributeProperty<PropertyType> extends Attribute implements Bas
 
   // Expose the value of the attribute
   PropertyType get value {
-    return attributeInstance.valueAsProperty;
+    return attributeInstance!.valueAsProperty;
   }
   PropertyType getValue() {
     return value;
@@ -21,7 +21,7 @@ abstract class _AttributeProperty<PropertyType> extends Attribute implements Bas
       changes: [
         ChangeAttributeSetValue(
           changeApplicationDepth: syncDepth,
-          itemID: attributeInstance.itemID,
+          itemID: attributeInstance!.itemID,
           attributeKey: attributeKey,
           value: newValue,
         ),

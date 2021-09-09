@@ -8,7 +8,7 @@ class AttributeItem<ItemClassType extends Item> extends Attribute {
 
   // Expose the value of the attribute
   ItemClassType get value {
-    return getItemFromItemID(attributeInstance.valueAsProperty);
+    return getItemFromItemID(attributeInstance!.valueAsProperty);
   }
 
   // Changes to the attribute made through this class are considered local changes
@@ -17,7 +17,7 @@ class AttributeItem<ItemClassType extends Item> extends Attribute {
       changes: [
         ChangeAttributeSetValue(
           changeApplicationDepth: syncDepth,
-          itemID: attributeInstance.itemID,
+          itemID: attributeInstance!.itemID,
           attributeKey: attributeKey,
           value: newValue.itemID,
         ),

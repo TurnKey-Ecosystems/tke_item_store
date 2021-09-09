@@ -1,11 +1,9 @@
 part of tke_item_store;
 
 class Event {
-  late List<Function?> listeners;
+  List<Function?> listeners = [];
 
-  Event() {
-    listeners = [];
-  }
+  Event();
 
   void addListener(Function? listener) {
     if (listener != null) {

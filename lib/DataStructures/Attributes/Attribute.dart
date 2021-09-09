@@ -3,12 +3,12 @@ part of tke_item_store;
 // Models an attribute instance
 abstract class Attribute implements OnAfterChange {
   // The attribute instance that this Attribute models
-  late final InstanceOfAttribute attributeInstance;
+  InstanceOfAttribute? attributeInstance;
 
 
   // We'll expose the on-after-change event of the attribute instance.
   Event get onAfterChange {
-    return attributeInstance.onAfterChange;
+    return attributeInstance!.onAfterChange;
   }
 
 
@@ -54,13 +54,13 @@ abstract class Attribute implements OnAfterChange {
 
   // An attribute has a unique attributeKey within its assocaited item.
   @override
-  int get hashCode => Quiver.hash2(attributeInstance.itemID.hashCode, attributeKey.hashCode);
+  int get hashCode => Quiver.hash2(attributeInstance!.itemID.hashCode, attributeKey.hashCode);
 
   // An attribute has a unique attributeKey within its assocaited item.
   @override
   bool operator ==(dynamic other) {
     return other is Attribute &&
-        other.attributeInstance.itemID.hashCode == attributeInstance.itemID.hashCode &&
+        other.attributeInstance!.itemID.hashCode == attributeInstance!.itemID.hashCode &&
         other.attributeKey.hashCode == attributeKey.hashCode;
   }
 }

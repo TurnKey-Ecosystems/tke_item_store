@@ -6,7 +6,7 @@ class AttributeStringSet extends Attribute {
   /// Allow devs to access the elements in this set
   Set<String> get allElements {
     Set<String> allElements = {};
-    for (String element in attributeInstance.getAllValuesAsSet<String>()) {
+    for (String element in attributeInstance!.getAllValuesAsSet<String>()) {
       allElements.add(
         element,
       );
@@ -21,7 +21,7 @@ class AttributeStringSet extends Attribute {
       changes: [
         ChangeAttributeAddValue(
           changeApplicationDepth: syncDepth,
-          itemID: attributeInstance.itemID,
+          itemID: attributeInstance!.itemID,
           attributeKey: attributeKey,
           value: newElement,
         ),
@@ -35,7 +35,7 @@ class AttributeStringSet extends Attribute {
       changes: [
         ChangeAttributeRemoveValue(
           changeApplicationDepth: syncDepth,
-          itemID: attributeInstance.itemID,
+          itemID: attributeInstance!.itemID,
           attributeKey: attributeKey,
           value: elementToRemove,
         ),

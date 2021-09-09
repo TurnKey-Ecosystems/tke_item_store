@@ -16,16 +16,16 @@ abstract class Item {
   );
 
   // The instnace of this item
-  late final SingleItemManager _itemManager;
+  SingleItemManager? _itemManager;
 
 
   // Expose the itemID for getting
-  late final String itemID;
+  String itemID = '';
 
 
   // Expose the onDelete event for listeners
   Event get onDelete {
-    return _itemManager.onDelete;
+    return _itemManager!.onDelete;
   }
   
 
@@ -82,7 +82,7 @@ abstract class Item {
   void _connectAttributesToAttributeInstances() {
     for (Attribute attribute in _getAllAttributes()) {
       attribute.connectToAttributeInstance(
-        itemManager: _itemManager,
+        itemManager: _itemManager!,
       );
     }
   }

@@ -62,11 +62,11 @@ abstract class AllItemsManager {
     );
   }*/
 
-  static late final void Function({required String fileName}) _deleteFile;
-  static late final String Function({required String fileName}) _readFileAsString;
-  static late final void Function({required String fileName, required String contents}) _writeFileAsString;
-  static late final void Function(Change change) _commitChange;
-  static late final void Function(List<Change> changes) _commitChanges;
+  static void Function({required String fileName})? _deleteFile;
+  static String Function({required String fileName})? _readFileAsString;
+  static void Function({required String fileName, required String contents})? _writeFileAsString;
+  static void Function(Change change)? _commitChange;
+  static void Function(List<Change> changes)? _commitChanges;
 
 
   // Load items from jsons
@@ -171,7 +171,7 @@ abstract class AllItemsManager {
 
             // Apply the attribute to the device
             if (attributeInit.changeApplicationDepth.index >= SyncDepth.CLOUD.index) {
-              _commitChange(attributeInit);
+              _commitChange!(attributeInit);
             }
           }
         }
@@ -221,12 +221,12 @@ abstract class AllItemsManager {
 
         // Commit this change
         if (change.changeApplicationDepth.index >= SyncDepth.CLOUD.index) {
-          _commitChange(change);
+          _commitChange!(change);
         }
 
         // Delete the local save file
         if (change.changeApplicationDepth.index >= SyncDepth.DEVICE.index) {
-          _deleteFile(fileName: SingleItemManager._getItemFileName(itemID: change.itemID));
+          _deleteFile!(fileName: SingleItemManager._getItemFileName(itemID: change.itemID));
         }
 
         // Remove the item instance from the list of item instances
@@ -279,10 +279,10 @@ class SingleItemManager {
   static const String ATTRIBUTES_KEY = "attributes";
 
   // Item type
-  late final String itemType;
+  String itemType;
 
   // Item ID
-  late final String itemID;
+  String itemID;
 
 
   /** All the attributes in this item. */
@@ -303,10 +303,11 @@ class SingleItemManager {
   SingleItemManager._createNewItem({
     required ChangeItemCreation itemCreationChange,
     required List<ChangeAttributeInit> attributeInitChanges,
-  }) {
+  })
+    : this.itemType = itemCreationChange.itemType,
+      this.itemID = itemCreationChange.itemID
+  {
     // Apply changes at the session depth
-    this.itemType = itemCreationChange.itemType;
-    this.itemID = itemCreationChange.itemID;
     for (ChangeAttributeInit attributeInit in attributeInitChanges) {
       _attributes[attributeInit.attributeKey] = InstanceOfAttribute._createNew(
         attributeInitDetails: attributeInit,
@@ -326,7 +327,7 @@ class SingleItemManager {
       }
 
       // Commit the changes
-      AllItemsManager._commitChanges(changesToCommitToTheCloud);
+      AllItemsManager._commitChanges!(changesToCommitToTheCloud);
     }
     
     // Apply changes at the device depth
@@ -350,17 +351,16 @@ class SingleItemManager {
       json[ATTRIBUTES_KEY] = attributesAsJson;
 
       // Save the new item instance locally
-      AllItemsManager._writeFileAsString(fileName: fileName, contents: D_Convert.jsonEncode(json));
+      AllItemsManager._writeFileAsString!(fileName: fileName, contents: D_Convert.jsonEncode(json));
     }
   }
 
 
   /** Loads a item instance from a json object */
-  SingleItemManager._fromNewJson(dynamic json) {
-    // Extract the itemType and itemID
-    this.itemType = json[ITEM_TYPE_KEY];
-    this.itemID = json[ITEM_ID_KEY];
-    
+  SingleItemManager._fromNewJson(dynamic json)
+    : this.itemType = json[ITEM_TYPE_KEY],
+      this.itemID = json[ITEM_ID_KEY]
+  {
     // Parse the attributes from the json
     Map<String, dynamic> attributesFromJson = json[ATTRIBUTES_KEY];
     for (String attributeKey in attributesFromJson.keys) {
@@ -467,13 +467,13 @@ class SingleItemManager {
     String itemFileName = _getItemFileName(itemID: attribute.itemID);
 
     // Read in the item file
-    Map<String, dynamic> itemJson = D_Convert.jsonDecode(AllItemsManager._readFileAsString(fileName: itemFileName));
+    Map<String, dynamic> itemJson = D_Convert.jsonDecode(AllItemsManager._readFileAsString!(fileName: itemFileName));
 
     // Update the attributes value
     itemJson[ATTRIBUTES_KEY][attribute.attributeKey] = attribute.toJson();
 
     // Save the updated item json.
-    AllItemsManager._writeFileAsString(fileName: itemFileName, contents: D_Convert.jsonEncode(itemJson));
+    AllItemsManager._writeFileAsString!(fileName: itemFileName, contents: D_Convert.jsonEncode(itemJson));
   }
 
   /** Generates the file name for the given item */
@@ -701,7 +701,7 @@ class InstanceOfAttribute {
 
       // Commit this change
       if (change.changeApplicationDepth == SyncDepth.CLOUD) {
-        AllItemsManager._commitChange(change);
+        AllItemsManager._commitChange!(change);
       }
 
       // Let listeners know that this attribute has been changed
