@@ -62,6 +62,7 @@ abstract class AllItemsManager {
     );
   }*/
 
+  static List<String> Function({required String fileExtension})? _getLocalFileNamesFromFileExtension;
   static void Function({required String fileName})? _deleteFile;
   static String Function({required String fileName})? _readFileAsString;
   static void Function({required String fileName, required String contents})? _writeFileAsString;
@@ -69,28 +70,63 @@ abstract class AllItemsManager {
   static void Function(List<Change> changes)? _commitChanges;
 
 
-  // Load items from jsons
-  static void setupAllItemsManagerFromItemJsons({
+  // Reload items from local json files
+  static void resetupAllItemsManagerFromItems({
+    required Map<String, dynamic> itemJsonsByFileName,
+  }) {
+    // Clear all existing files
+    _itemInstances = Map();
+    List<String> oldItemFileNames = _getLocalFileNamesFromFileExtension!(fileExtension: SingleItemManager.FILE_EXTENTION);
+    for (String fileName in oldItemFileNames) {
+      _deleteFile!(fileName: fileName);
+    }
+
+    // Save all new files
+    for (String fileName in itemJsonsByFileName.keys) {
+      _writeFileAsString!(
+        fileName: fileName,
+        contents: D_Convert.jsonEncode(itemJsonsByFileName[fileName]),
+      );
+    }
+
+    // Resetup the manager
+    AllItemsManager.setupAllItemsManager(
+      deviceID: _deviceID,
+      requestNewItemIndex: _requestNewItemIndex!,
+      getLocalFileNamesFromFileExtension: _getLocalFileNamesFromFileExtension!,
+      deleteFile: _deleteFile!,
+      readFileAsString: _readFileAsString!,
+      writeFileAsString: _writeFileAsString!,
+      commitChange: _commitChange!,
+      commitChanges: _commitChanges!,
+    );
+  }
+
+
+  // Load items from local json files
+  static void setupAllItemsManager({
     required String deviceID,
     required int Function({required String itemType}) requestNewItemIndex,
+    required List<String> Function({required String fileExtension}) getLocalFileNamesFromFileExtension,
     required void Function({required String fileName}) deleteFile,
     required String Function({required String fileName}) readFileAsString,
     required void Function({required String fileName, required String contents}) writeFileAsString,
     required void Function(Change change) commitChange,
     required void Function(List<Change> changes) commitChanges,
-    required List<Map<String, dynamic>> itemJsons,
   }) {
     _deviceID = deviceID;
     _requestNewItemIndex = requestNewItemIndex;
+    _getLocalFileNamesFromFileExtension = getLocalFileNamesFromFileExtension;
     _deleteFile = deleteFile;
     _readFileAsString = readFileAsString;
     _writeFileAsString = writeFileAsString;
     _commitChange = commitChange;
     _commitChanges = commitChanges;
-    for (Map<String, dynamic> itemJson in itemJsons) {
+    List<String> itemFileNames = _getLocalFileNamesFromFileExtension!(fileExtension: SingleItemManager.FILE_EXTENTION);
+    for (String itemFileName in itemFileNames) {
       // Load the item instance
       SingleItemManager itemInstance = SingleItemManager._fromUnknownJson(
-        json: itemJson,
+        json: D_Convert.jsonDecode(_readFileAsString!(fileName: itemFileName)),
       );
       _itemInstances[itemInstance.itemID] = itemInstance;
 
