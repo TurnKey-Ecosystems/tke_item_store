@@ -12,6 +12,7 @@ import 'package:quiver/core.dart' as Quiver;
 
 // Managed by tke-cli DO NOT TOUCH
 // tke-cli-begin-tag: "parts"
+
 part './DataStructures/AllItemsManager.dart';
 part './DataStructures/Attributes/Attribute.dart';
 part './DataStructures/Attributes/AttributeItem.dart';

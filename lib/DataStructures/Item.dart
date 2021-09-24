@@ -30,7 +30,7 @@ abstract class Item {
   
 
   /// Item subtypes should override this
-  List<Attribute> getAllAttributes();
+  List<Attribute> getAllAttributes() { return []; }
   List<Attribute> _getAllAttributes() {
     List<Attribute> allAttributes = getAllAttributes();
     allAttributes.add(_containedIn);
