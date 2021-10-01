@@ -16,10 +16,12 @@ class Computed<ValueType> implements Getter<ValueType> {
 
 
   /// Created a new computed value
-  Computed({
-    required this.computeValue,
-    required List<Event> recomputeTriggers,
-  }) {
+  Computed(
+    this.computeValue,
+    {
+      required List<Event> recomputeTriggers,
+    }
+  ) {
     // If any of the dependencies change, then let listenners know
     for (Event event in recomputeTriggers) {
       event.addListener(onAfterChange.trigger);
