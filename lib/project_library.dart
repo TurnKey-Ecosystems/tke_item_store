@@ -24,5 +24,8 @@ part './DataStructures/Item.dart';
 part './DataStructures/SyncDepth.dart';
 part './Utilities/BasicValueWrapper.dart';
 part './Utilities/Event.dart';
+part './Utilities/Getter.dart';
 part './Utilities/OnAfterChange.dart';
+part './Utilities/Setter.dart';
+part './Utilities/Value.dart';
 // tke-cli-end-tag: "parts"
