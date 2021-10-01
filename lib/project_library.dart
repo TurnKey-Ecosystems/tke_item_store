@@ -23,6 +23,7 @@ part './DataStructures/Change.dart';
 part './DataStructures/Item.dart';
 part './DataStructures/SyncDepth.dart';
 part './Utilities/BasicValueWrapper.dart';
+part './Utilities/Computed.dart';
 part './Utilities/Event.dart';
 part './Utilities/Getter.dart';
 part './Utilities/OnAfterChange.dart';
