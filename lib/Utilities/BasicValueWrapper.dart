@@ -1,6 +1,6 @@
 part of tke_item_store;
 
-class BasicValueWrapper<ValueType> implements Value<ValueType> {
+class BasicValueWrapper<ValueType> implements IValue<ValueType> {
   // On changed event
   final Event onAfterChange = Event();
 
