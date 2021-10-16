@@ -40,7 +40,8 @@ abstract class Getter<ValueType> {
   Event get onAfterChange {
     return _onAfterChange;
   }
-  ValueType Function() _getValue = (() => null) as ValueType Function();
+  /// This is initialized with a stand-in, it must be replaced in the constructor!
+  ValueType Function() _getValue = (() => null as ValueType);
   ValueType getValue() {
     return _getValue();
   }
@@ -64,6 +65,7 @@ class G<ValueType> extends Getter<ValueType> {
 
 
 abstract class Setter<ValueType> {
+  /// This is initialized with a stand-in, it must be replaced in the constructor!
   void Function(ValueType newValue) _setValue = ((_) => null);
   void setValue(ValueType newValue) {
     _setValue(newValue);
@@ -81,7 +83,7 @@ abstract class Setter<ValueType> {
 
 class S<ValueType> extends Setter<ValueType> {
   factory S.v(ValueType initialValue) => Value.ofNewVariable(initialValue);
-  factory S(void Function(ValueType newValue) set) => Value.fromFunctions(set: set, get: (() => null) as ValueType Function());
+  factory S(void Function(ValueType newValue) set) => Value.fromFunctions(set: set, get: (() => null as ValueType));
 }
 
 
