@@ -44,6 +44,21 @@ class Value<ValueType> implements Getter<ValueType>, Setter<ValueType> {
 
 
 
+abstract class V<ValueType> extends Value<ValueType> {
+  V(ValueType initialValue) : super.ofVariable(initialValue);
+  V.f({
+    required ValueType Function() get,
+    required void Function(ValueType newValue) set,
+    List<Event?>? onAfterChangeTriggers,
+  }) : super.fromFunctions(
+        get: get,
+        set: set,
+        onAfterChangeTriggers: onAfterChangeTriggers,
+      );
+}
+
+
+
 abstract class Getter<ValueType> implements G<ValueType> {
   factory Getter.ofVariable(ValueType initialValue)
     => Value.ofVariable(initialValue);
