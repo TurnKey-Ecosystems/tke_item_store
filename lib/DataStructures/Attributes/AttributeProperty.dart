@@ -2,7 +2,7 @@ part of tke_item_store;
 
 
 // Provides a control pannel for an instance of a property type attribute
-abstract class _AttributeProperty<PropertyType> extends Attribute implements BasicValueWrapper<PropertyType> {
+abstract class _AttributeProperty<PropertyType> extends Attribute implements Value<PropertyType> {
   // TODO: Implementing BasicValueWrapper requies us to have this. Fix that in future.
   late PropertyType _value;
 

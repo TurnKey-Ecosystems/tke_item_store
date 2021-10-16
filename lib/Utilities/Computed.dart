@@ -1,7 +1,7 @@
 part of tke_item_store;
 
 /// Computes a value, and triggers an onAfterChange event whenever any of the dependencies change.
-class Computed<ValueType> implements IGetter<ValueType> {
+class Computed<ValueType> implements Getter<ValueType> {
   /// Triggered any time there is a new value
   final Event onAfterChange = Event();
 

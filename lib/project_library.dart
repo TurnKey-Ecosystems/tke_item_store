@@ -10,6 +10,12 @@ import 'dart:math' as D_Math;
 import 'dart:typed_data' as D_Data;
 import 'package:quiver/core.dart' as Quiver;
 
+// Local imports & exports
+import 'OtherLibraries/Event.dart';
+export 'OtherLibraries/Event.dart';
+import 'OtherLibraries/Value.dart';
+export 'OtherLibraries/Value.dart';
+
 // Managed by tke-cli DO NOT TOUCH
 // tke-cli-begin-tag: "parts"
 
@@ -22,11 +28,5 @@ part './DataStructures/Attributes/AttributeStringSet.dart';
 part './DataStructures/Change.dart';
 part './DataStructures/Item.dart';
 part './DataStructures/SyncDepth.dart';
-part './Utilities/BasicValueWrapper.dart';
 part './Utilities/Computed.dart';
-part './Utilities/Event.dart';
-part './Utilities/Getter.dart';
-part './Utilities/OnAfterChange.dart';
-part './Utilities/Setter.dart';
-part './Utilities/Value.dart';
 // tke-cli-end-tag: "parts"

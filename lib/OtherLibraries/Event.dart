@@ -1,4 +1,4 @@
-part of tke_item_store;
+import 'dart:developer';
 
 class Event {
   List<Function?> listeners = [];
@@ -22,7 +22,7 @@ class Event {
         try {
           listener();
         } catch(e) {
-          D_Dev.log(e.toString());
+          log(e.toString());
         }
       } else {
         nullListenerCount++;

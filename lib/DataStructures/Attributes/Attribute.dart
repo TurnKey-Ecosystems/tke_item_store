@@ -1,7 +1,7 @@
 part of tke_item_store;
 
 // Models an attribute instance
-abstract class Attribute implements OnAfterChange {
+abstract class Attribute {
   // The attribute instance that this Attribute models
   InstanceOfAttribute? attributeInstance;
 
