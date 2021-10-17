@@ -12,6 +12,8 @@ class Value<ValueType> with Getter<ValueType>, Setter<ValueType> implements G<Va
     required void Function(ValueType newValue) set,
     List<Event?>? onAfterChangeTriggers,
   }) {
+    _getValue = get;
+    _setValue = set;
     onAfterChangeTriggers?.forEach((Event? trigger) {
       trigger?.addListener(_onAfterChange.trigger);
     });
@@ -23,12 +25,12 @@ class Value<ValueType> with Getter<ValueType>, Setter<ValueType> implements G<Va
 class V<ValueType> extends Value<ValueType> {
   V(ValueType initialValue) : super.ofNewVariable(initialValue);
   V.f({
-    required ValueType Function() get,
-    required void Function(ValueType newValue) set,
+    required ValueType Function() g,
+    required void Function(ValueType newValue) s,
     List<Event?>? onAfterChangeTriggers,
   }) : super.fromFunctions(
-        get: get,
-        set: set,
+        get: g,
+        set: s,
         onAfterChangeTriggers: onAfterChangeTriggers,
       );
 }
