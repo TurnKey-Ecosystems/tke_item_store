@@ -25,12 +25,12 @@ class Value<ValueType> with Getter<ValueType>, Setter<ValueType> implements G<Va
 class V<ValueType> extends Value<ValueType> {
   V(ValueType initialValue) : super.ofNewVariable(initialValue);
   V.f({
-    required ValueType Function() g,
-    required void Function(ValueType newValue) s,
+    required ValueType Function() get,
+    required void Function(ValueType newValue) set,
     List<Event?>? onAfterChangeTriggers,
   }) : super.fromFunctions(
-        get: g,
-        set: s,
+        get: get,
+        set: set,
         onAfterChangeTriggers: onAfterChangeTriggers,
       );
 }
