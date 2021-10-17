@@ -46,9 +46,10 @@ abstract class Change {
     required this.changeType,
     required this.changeApplicationDepth,
     required this.itemID,
+    int? changeTimePosix,
   })
     : this.apiVersion = _CURRENT_API_VERSION,
-      this.changeTimePosix = DateTime.now().millisecondsSinceEpoch;
+      this.changeTimePosix = changeTimePosix ?? DateTime.now().millisecondsSinceEpoch;
 
   /** Creates a change object fron a json */
   Change._fromJson(dynamic json)
@@ -207,11 +208,13 @@ abstract class AttributeChange extends Change {
     required this.attributeType,
     required this.attributeKey,
     required this.value,
+    int? changeTimePosix,
   })
     : super._(
       changeType: changeType,
       changeApplicationDepth: changeApplicationDepth,
       itemID: itemID,
+      changeTimePosix: changeTimePosix,
     );
 
   /** Loads an atribute change from a json. */
@@ -247,6 +250,7 @@ class ChangeAttributeInit extends AttributeChange {
       attributeType: AttributeType.PROPERTY,
       attributeKey: attributeKey,
       value: value,
+      changeTimePosix: 0,
     );
 
   /** Creates an attribute-init change for a set type attribute */
@@ -261,6 +265,7 @@ class ChangeAttributeInit extends AttributeChange {
       attributeType: AttributeType.SET,
       attributeKey: attributeKey,
       value: [],
+      changeTimePosix: 0,
     );
 
   /** Loads an atribute-init change from a json. */
