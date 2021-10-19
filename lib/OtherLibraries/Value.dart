@@ -52,7 +52,7 @@ abstract class Getter<ValueType> {
   }
   static Getter<ValueType> ofNewVariable<ValueType>(ValueType initialValue)
     => G(initialValue);
-  static Getter<ValueType> fromFunctions<ValueType>(ValueType Function() get, { List<Event?>? onAfterChangeTriggers })
+  static Getter<ValueType> fromFunction<ValueType>(ValueType Function() get, { List<Event?>? onAfterChangeTriggers })
     => G.f(get, onAfterChangeTriggers: onAfterChangeTriggers);
 }
 
@@ -101,6 +101,34 @@ class _VariableWrapper<VariableType> {
     onAfterChange.trigger();
   }
   _VariableWrapper(this._variable);
+}
+
+
+
+extension VariableToGetterOrValue<ValueType> on ValueType {
+  Value<ValueType> get v {
+    return Value.ofNewVariable(this);
+  }
+
+  Getter<ValueType> get g {
+    return Getter.ofNewVariable(this);
+  }
+}
+
+
+
+extension FuncToGetter<ValueType> on ValueType Function() {
+  Getter<ValueType> get g {
+    return Getter.fromFunction(this);
+  }
+}
+
+
+
+extension FuncToSetter<ValueType> on void Function(ValueType) {
+  Setter<ValueType> get s {
+    return Setter.fromFunction(this);
+  }
 }
 
 
