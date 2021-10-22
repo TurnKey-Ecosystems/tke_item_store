@@ -1,9 +1,11 @@
 import 'dart:developer';
 
 class Event {
-  List<Function?> listeners = [];
+  final List<Function?> listeners;
 
-  Event();
+  Event() : listeners = [];
+
+  const Event.unchanging() : listeners = const [];
 
   void addListener(Function? listener) {
     if (listener != null) {
