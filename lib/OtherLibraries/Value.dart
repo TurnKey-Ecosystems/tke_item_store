@@ -1,11 +1,15 @@
 import 'Event.dart';
 
 class Value<ValueType> with Getter<ValueType>, Setter<ValueType> implements G<ValueType>, S<ValueType> {
+  ValueType Function() _getValue = (() => null as ValueType);
+  ValueType getValue() {
+    return _getValue();
+  }
   Value.ofNewVariable(ValueType intialValue) {
     _VariableWrapper<ValueType> wrapper = _VariableWrapper(intialValue);
     _getValue = wrapper.getValue;
     _setValue = wrapper.setValue;
-    _onAfterChange = wrapper.onAfterChange;
+    wrapper.onAfterChange.addListener(_onAfterChange.trigger);
   }
   Value.fromFunctions({
     required ValueType Function() get,
@@ -38,30 +42,48 @@ class V<ValueType> extends Value<ValueType> {
 
 
 abstract class Getter<ValueType> {
-  Event _onAfterChange = Event();
+  final Event _onAfterChange = Event();
   Event get onAfterChange {
     return _onAfterChange;
   }
   /// This is initialized with a stand-in, it must be replaced in the constructor!
-  ValueType Function() _getValue = (() => null as ValueType);
-  ValueType getValue() {
-    return _getValue();
-  }
+  //ValueType Function() _getValue = (() => null as ValueType);
+  ValueType getValue();
   ValueType get value {
-    return _getValue();
+    return getValue();
   }
   static Getter<ValueType> ofNewVariable<ValueType>(ValueType initialValue)
-    => G(initialValue);
+    => Value.ofNewVariable(initialValue);
   static Getter<ValueType> fromFunction<ValueType>(ValueType Function() get, { List<Event?>? onAfterChangeTriggers })
-    => G.f(get, onAfterChangeTriggers: onAfterChangeTriggers);
+    => Value.fromFunctions(get: get, set: ((_) => null), onAfterChangeTriggers: onAfterChangeTriggers);
 }
 
 
 
-class G<ValueType> extends Getter<ValueType> {
-  factory G(ValueType initialValue) => Value.ofNewVariable(initialValue);
-  factory G.f(ValueType Function() get, { List<Event?>? onAfterChangeTriggers })
-    => Value.fromFunctions(get: get, set: ((_) => null), onAfterChangeTriggers: onAfterChangeTriggers);
+class ConstGetter<ValueType> implements Getter<ValueType> {
+  final Event _onAfterChange = const Event.unchanging();
+  Event get onAfterChange {
+    return _onAfterChange;
+  }
+  /// This is initialized with a stand-in, it must be replaced in the constructor!
+  final ValueType constValue;
+  ValueType getValue() {
+    return constValue;
+  }
+  ValueType get value {
+    return getValue();
+  }
+
+  const ConstGetter(this.constValue);
+}
+
+
+
+abstract class G<ValueType> extends Getter<ValueType> {
+  static Getter<ValueType> ofNewVariable<ValueType>(ValueType initialValue)
+    => Getter.ofNewVariable(initialValue);
+  static Getter<ValueType> fromFunction<ValueType>(ValueType Function() get, { List<Event?>? onAfterChangeTriggers })
+    => Getter.fromFunction(get, onAfterChangeTriggers: onAfterChangeTriggers);
 }
 
 
