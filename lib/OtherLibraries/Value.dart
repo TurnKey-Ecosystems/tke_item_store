@@ -79,11 +79,12 @@ class ConstGetter<ValueType> implements Getter<ValueType> {
 
 
 
-abstract class G<ValueType> extends Getter<ValueType> {
-  static Getter<ValueType> ofNewVariable<ValueType>(ValueType initialValue)
-    => Getter.ofNewVariable(initialValue);
-  static Getter<ValueType> fromFunction<ValueType>(ValueType Function() get, { List<Event?>? onAfterChangeTriggers })
-    => Getter.fromFunction(get, onAfterChangeTriggers: onAfterChangeTriggers);
+class G<ValueType> extends Getter<ValueType> {
+  ValueType getValue() => null as ValueType;
+  factory G(ValueType initialValue)
+    => Value.ofNewVariable(initialValue);
+  factory G.f(ValueType Function() get, { List<Event?>? onAfterChangeTriggers })
+    => Value.fromFunctions(get: get, set: ((_) => null), onAfterChangeTriggers: onAfterChangeTriggers);
 }
 
 
