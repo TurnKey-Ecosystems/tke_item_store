@@ -1,3 +1,5 @@
+import 'package:tke_item_store/project_library.dart';
+
 import 'Event.dart';
 
 class Value<ValueType> with Getter<ValueType>, Setter<ValueType> implements G<ValueType>, S<ValueType> {
@@ -151,6 +153,70 @@ extension FuncToGetter<ValueType> on ValueType Function() {
 extension FuncToSetter<ValueType> on void Function(ValueType) {
   Setter<ValueType> get s {
     return Setter.fromFunction(this);
+  }
+}
+
+
+
+extension BasicDoubleArithmetic on Getter<double> {
+  Getter<double> operator +(Getter<double> other) {
+    return Computed(
+      () {
+        return this.value + other.value;
+      },
+      recomputeTriggers: [
+        this.onAfterChange,
+        other.onAfterChange,
+      ],
+    );
+  }
+  
+  Getter<double> operator -(Getter<double> other) {
+    return Computed(
+      () {
+        return this.value - other.value;
+      },
+      recomputeTriggers: [
+        this.onAfterChange,
+        other.onAfterChange,
+      ],
+    );
+  }
+  
+  Getter<double> operator *(Getter<double> other) {
+    return Computed(
+      () {
+        return this.value * other.value;
+      },
+      recomputeTriggers: [
+        this.onAfterChange,
+        other.onAfterChange,
+      ],
+    );
+  }
+  
+  Getter<double> operator /(Getter<double> other) {
+    return Computed(
+      () {
+        return this.value / other.value;
+      },
+      recomputeTriggers: [
+        this.onAfterChange,
+        other.onAfterChange,
+      ],
+    );
+  }
+  
+  Getter<double> operator %(Getter<double> other) {
+    return Computed(
+      () {
+        return this.value % other.value;
+      },
+      recomputeTriggers: [
+        this.onAfterChange,
+        other.onAfterChange,
+      ],
+    );
   }
 }
 
