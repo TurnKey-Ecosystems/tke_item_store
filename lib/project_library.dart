@@ -29,5 +29,6 @@ part './DataStructures/Change.dart';
 part './DataStructures/Item.dart';
 part './DataStructures/SyncDepth.dart';
 part './Utilities/Computed.dart';
+part './Utilities/IfElse.dart';
 part './Utilities/Math.dart';
 // tke-cli-end-tag: "parts"
