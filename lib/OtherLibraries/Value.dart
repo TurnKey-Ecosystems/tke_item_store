@@ -58,6 +58,8 @@ abstract class Getter<ValueType> {
     => Value.ofNewVariable(initialValue);
   static Getter<ValueType> fromFunction<ValueType>(ValueType Function() get, { List<Event?>? onAfterChangeTriggers })
     => Value.fromFunctions(get: get, set: ((_) => null), onAfterChangeTriggers: onAfterChangeTriggers);
+  @override
+  int get hashCode => getValue().hashCode;
 }
 
 
