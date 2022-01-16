@@ -35,4 +35,8 @@ class IfElse<ValueType> implements Getter<ValueType> {
     ifTrue.onAfterChange.addListener(onAfterChange.trigger);
     ifFalse.onAfterChange.addListener(onAfterChange.trigger);
   }
+
+  bool operator ==(dynamic other) => other is Getter<ValueType> && this.value == other.value;
+  @override
+  int get hashCode => getValue().hashCode;
 }

@@ -27,4 +27,8 @@ class Computed<ValueType> implements Getter<ValueType> {
       event?.addListener(onAfterChange.trigger);
     }
   }
+
+  bool operator ==(dynamic other) => other is Getter<ValueType> && this.value == other.value;
+  @override
+  int get hashCode => getValue().hashCode;
 }

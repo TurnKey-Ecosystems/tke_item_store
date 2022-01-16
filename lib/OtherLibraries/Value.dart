@@ -58,6 +58,8 @@ abstract class Getter<ValueType> {
     => Value.ofNewVariable(initialValue);
   static Getter<ValueType> fromFunction<ValueType>(ValueType Function() get, { List<Event?>? onAfterChangeTriggers })
     => Value.fromFunctions(get: get, set: ((_) => null), onAfterChangeTriggers: onAfterChangeTriggers);
+
+  bool operator ==(dynamic other) => other is Getter<ValueType> && this.value == other.value;
   @override
   int get hashCode => getValue().hashCode;
 }
@@ -79,6 +81,10 @@ class ConstGetter<ValueType> implements Getter<ValueType> {
   }
 
   const ConstGetter(this.constValue);
+
+  bool operator ==(dynamic other) => other is Getter<ValueType> && this.value == other.value;
+  @override
+  int get hashCode => getValue().hashCode;
 }
 
 
@@ -224,6 +230,54 @@ extension BasicDoubleArithmetic on Getter<double> {
     return Computed(
       () {
         return this.value % other.value;
+      },
+      recomputeTriggers: [
+        this.onAfterChange,
+        other.onAfterChange,
+      ],
+    );
+  }
+  
+  Getter<bool> operator <(Getter<double> other) {
+    return Computed(
+      () {
+        return this.value < other.value;
+      },
+      recomputeTriggers: [
+        this.onAfterChange,
+        other.onAfterChange,
+      ],
+    );
+  }
+  
+  Getter<bool> operator <=(Getter<double> other) {
+    return Computed(
+      () {
+        return this.value <= other.value;
+      },
+      recomputeTriggers: [
+        this.onAfterChange,
+        other.onAfterChange,
+      ],
+    );
+  }
+  
+  Getter<bool> operator >=(Getter<double> other) {
+    return Computed(
+      () {
+        return this.value >= other.value;
+      },
+      recomputeTriggers: [
+        this.onAfterChange,
+        other.onAfterChange,
+      ],
+    );
+  }
+  
+  Getter<bool> operator >(Getter<double> other) {
+    return Computed(
+      () {
+        return this.value > other.value;
       },
       recomputeTriggers: [
         this.onAfterChange,
