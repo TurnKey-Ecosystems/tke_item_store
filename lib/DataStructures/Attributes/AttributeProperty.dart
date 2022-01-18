@@ -3,6 +3,9 @@ part of tke_item_store;
 
 // Provides a control pannel for an instance of a property type attribute
 abstract class _AttributeProperty<PropertyType> extends Attribute implements Value<PropertyType> {
+  /// Register witht he getter store
+  late final String getterID = GetterStore.registerWithGetterStore(this);
+  
   // TODO: Implementing BasicValueWrapper requies us to have this. Fix that in future.
   late PropertyType _value;
 
@@ -61,6 +64,11 @@ abstract class _AttributeProperty<PropertyType> extends Attribute implements Val
       attributeKey: attributeKey,
       value: valueOnCreateNew,
     );
+  }
+  
+  @override
+  String toString() {
+    return GetterStore.getterToString(this);
   }
 }
 

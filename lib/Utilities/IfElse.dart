@@ -2,6 +2,9 @@ part of tke_item_store;
 
 /// Returns one of two different values absed on a condition
 class IfElse<ValueType> implements Getter<ValueType> {
+  /// Register witht he getter store
+  late final String getterID = GetterStore.registerWithGetterStore(this);
+
   /// The condition that will change the result
   final Getter<bool> condition;
 
@@ -34,6 +37,11 @@ class IfElse<ValueType> implements Getter<ValueType> {
     condition.onAfterChange.addListener(onAfterChange.trigger);
     ifTrue.onAfterChange.addListener(onAfterChange.trigger);
     ifFalse.onAfterChange.addListener(onAfterChange.trigger);
+  }
+  
+  @override
+  String toString() {
+    return GetterStore.getterToString(this);
   }
 
   bool operator ==(dynamic other) => other is Getter<ValueType> && this.value == other.value;
