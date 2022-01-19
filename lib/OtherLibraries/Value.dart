@@ -312,8 +312,9 @@ abstract class GetterStore {
 
   static Map<String, Getter<dynamic>> _gettersByID = Map();
   
+  static const String INLINE_GETTER_TAG = '<getter getterID="';
   static String getterToString<GetterType>(Getter<GetterType> getter) {
-    return '<getter getterID="' + getter.getterID + '"/>';
+    return INLINE_GETTER_TAG + getter.getterID + '"/>';
   }
 
   static Getter<GetterType> getGetterFromID<GetterType>(String getterID) {
