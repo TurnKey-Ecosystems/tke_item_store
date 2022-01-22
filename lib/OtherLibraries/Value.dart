@@ -2,11 +2,14 @@ import 'package:tke_item_store/project_library.dart';
 
 import 'Event.dart';
 
-class Value<ValueType> with Getter<ValueType>, Setter<ValueType> implements G<ValueType>, S<ValueType> {
+class Value<ValueType>
+    with Getter<ValueType>, Setter<ValueType>
+    implements G<ValueType>, S<ValueType> {
   ValueType Function() _getValue = (() => null as ValueType);
   ValueType getValue() {
     return _getValue();
   }
+
   Value.ofNewVariable(ValueType intialValue) {
     _VariableWrapper<ValueType> wrapper = _VariableWrapper(intialValue);
     _getValue = wrapper.getValue;
@@ -26,8 +29,6 @@ class Value<ValueType> with Getter<ValueType>, Setter<ValueType> implements G<Va
   }
 }
 
-
-
 class V<ValueType> extends Value<ValueType> {
   V(ValueType initialValue) : super.ofNewVariable(initialValue);
   V.f({
@@ -35,13 +36,11 @@ class V<ValueType> extends Value<ValueType> {
     required void Function(ValueType newValue) set,
     List<Event?>? onAfterChangeTriggers,
   }) : super.fromFunctions(
-        get: get,
-        set: set,
-        onAfterChangeTriggers: onAfterChangeTriggers,
-      );
+          get: get,
+          set: set,
+          onAfterChangeTriggers: onAfterChangeTriggers,
+        );
 }
-
-
 
 abstract class Getter<ValueType> {
   late final String getterID = GetterStore.registerWithGetterStore(this);
@@ -49,28 +48,33 @@ abstract class Getter<ValueType> {
   Event get onAfterChange {
     return _onAfterChange;
   }
+
   /// This is initialized with a stand-in, it must be replaced in the constructor!
   //ValueType Function() _getValue = (() => null as ValueType);
   ValueType getValue();
   ValueType get value {
     return getValue();
   }
-  static Getter<ValueType> ofNewVariable<ValueType>(ValueType initialValue)
-    => Value.ofNewVariable(initialValue);
-  static Getter<ValueType> fromFunction<ValueType>(ValueType Function() get, { List<Event?>? onAfterChangeTriggers })
-    => Value.fromFunctions(get: get, set: ((_) => null), onAfterChangeTriggers: onAfterChangeTriggers);
-  
+
+  static Getter<ValueType> ofNewVariable<ValueType>(ValueType initialValue) =>
+      Value.ofNewVariable(initialValue);
+  static Getter<ValueType> fromFunction<ValueType>(ValueType Function() get,
+          {List<Event?>? onAfterChangeTriggers}) =>
+      Value.fromFunctions(
+          get: get,
+          set: ((_) => null),
+          onAfterChangeTriggers: onAfterChangeTriggers);
+
   @override
   String toString() {
     return GetterStore.getterToString(this);
   }
 
-  bool operator ==(dynamic other) => other is Getter<ValueType> && this.value == other.value;
+  bool operator ==(dynamic other) =>
+      other is Getter<ValueType> && this.value == other.value;
   @override
   int get hashCode => getValue().hashCode;
 }
-
-
 
 class ConstGetter<ValueType> implements Getter<ValueType> {
   final String getterID = "notInStore";
@@ -78,38 +82,40 @@ class ConstGetter<ValueType> implements Getter<ValueType> {
   Event get onAfterChange {
     return _onAfterChange;
   }
+
   /// This is initialized with a stand-in, it must be replaced in the constructor!
   final ValueType constValue;
   ValueType getValue() {
     return constValue;
   }
+
   ValueType get value {
     return getValue();
   }
 
   const ConstGetter(this.constValue);
-  
+
   @override
   String toString() {
     return constValue.toString();
   }
 
-  bool operator ==(dynamic other) => other is Getter<ValueType> && this.value == other.value;
+  bool operator ==(dynamic other) =>
+      other is Getter<ValueType> && this.value == other.value;
   @override
   int get hashCode => getValue().hashCode;
 }
 
-
-
 class G<ValueType> extends Getter<ValueType> {
   ValueType getValue() => null as ValueType;
-  factory G(ValueType initialValue)
-    => Value.ofNewVariable(initialValue);
-  factory G.f(ValueType Function() get, { List<Event?>? onAfterChangeTriggers })
-    => Value.fromFunctions(get: get, set: ((_) => null), onAfterChangeTriggers: onAfterChangeTriggers);
+  factory G(ValueType initialValue) => Value.ofNewVariable(initialValue);
+  factory G.f(ValueType Function() get,
+          {List<Event?>? onAfterChangeTriggers}) =>
+      Value.fromFunctions(
+          get: get,
+          set: ((_) => null),
+          onAfterChangeTriggers: onAfterChangeTriggers);
 }
-
-
 
 abstract class Setter<ValueType> {
   /// This is initialized with a stand-in, it must be replaced in the constructor!
@@ -117,23 +123,23 @@ abstract class Setter<ValueType> {
   void setValue(ValueType newValue) {
     _setValue(newValue);
   }
+
   void set value(ValueType newValue) {
     _setValue(newValue);
   }
-  static Setter<ValueType> ofNewVariable<ValueType>(ValueType initialValue)
-    => S.v(initialValue);
-  static Setter<ValueType> fromFunction<ValueType>(void Function(ValueType newValue) set)
-    => S(set);
+
+  static Setter<ValueType> ofNewVariable<ValueType>(ValueType initialValue) =>
+      S.v(initialValue);
+  static Setter<ValueType> fromFunction<ValueType>(
+          void Function(ValueType newValue) set) =>
+      S(set);
 }
-
-
 
 class S<ValueType> extends Setter<ValueType> {
   factory S.v(ValueType initialValue) => Value.ofNewVariable(initialValue);
-  factory S(void Function(ValueType newValue) set) => Value.fromFunctions(set: set, get: (() => null as ValueType));
+  factory S(void Function(ValueType newValue) set) =>
+      Value.fromFunctions(set: set, get: (() => null as ValueType));
 }
-
-
 
 class _VariableWrapper<VariableType> {
   Event onAfterChange = Event();
@@ -141,14 +147,16 @@ class _VariableWrapper<VariableType> {
   VariableType getValue() {
     return _variable;
   }
+
   void setValue(VariableType newValue) {
-    _variable = newValue;
-    onAfterChange.trigger();
+    if (_variable != newValue) {
+      _variable = newValue;
+      onAfterChange.trigger();
+    }
   }
+
   _VariableWrapper(this._variable);
 }
-
-
 
 extension VariableToGetterOrValue<ValueType> on ValueType {
   Value<ValueType> get v {
@@ -160,23 +168,17 @@ extension VariableToGetterOrValue<ValueType> on ValueType {
   }
 }
 
-
-
 extension FuncToGetter<ValueType> on ValueType Function() {
   Getter<ValueType> get g {
     return Getter.fromFunction(this);
   }
 }
 
-
-
 extension FuncToSetter<ValueType> on void Function(ValueType) {
   Setter<ValueType> get s {
     return Setter.fromFunction(this);
   }
 }
-
-
 
 typedef Num = Value<double>;
 typedef Bool = Value<bool>;
@@ -201,7 +203,7 @@ extension BasicDoubleArithmetic on Getter<double> {
       ],
     );
   }
-  
+
   Getter<double> operator -(Getter<double> other) {
     return Computed(
       () {
@@ -213,7 +215,7 @@ extension BasicDoubleArithmetic on Getter<double> {
       ],
     );
   }
-  
+
   Getter<double> operator *(Getter<double> other) {
     return Computed(
       () {
@@ -225,7 +227,7 @@ extension BasicDoubleArithmetic on Getter<double> {
       ],
     );
   }
-  
+
   Getter<double> operator /(Getter<double> other) {
     return Computed(
       () {
@@ -237,7 +239,7 @@ extension BasicDoubleArithmetic on Getter<double> {
       ],
     );
   }
-  
+
   Getter<double> operator %(Getter<double> other) {
     return Computed(
       () {
@@ -249,7 +251,7 @@ extension BasicDoubleArithmetic on Getter<double> {
       ],
     );
   }
-  
+
   Getter<bool> operator <(Getter<double> other) {
     return Computed(
       () {
@@ -261,7 +263,7 @@ extension BasicDoubleArithmetic on Getter<double> {
       ],
     );
   }
-  
+
   Getter<bool> operator <=(Getter<double> other) {
     return Computed(
       () {
@@ -273,7 +275,7 @@ extension BasicDoubleArithmetic on Getter<double> {
       ],
     );
   }
-  
+
   Getter<bool> operator >=(Getter<double> other) {
     return Computed(
       () {
@@ -285,7 +287,7 @@ extension BasicDoubleArithmetic on Getter<double> {
       ],
     );
   }
-  
+
   Getter<bool> operator >(Getter<double> other) {
     return Computed(
       () {
@@ -299,8 +301,6 @@ extension BasicDoubleArithmetic on Getter<double> {
   }
 }
 
-
-
 abstract class GetterStore {
   static int _nextGetterID = 0;
   static String registerWithGetterStore<GetterType>(Getter<GetterType> getter) {
@@ -311,7 +311,7 @@ abstract class GetterStore {
   }
 
   static Map<String, Getter<dynamic>> _gettersByID = Map();
-  
+
   static const String INLINE_GETTER_TAG = '<getter getterID="';
   static String getterToString<GetterType>(Getter<GetterType> getter) {
     return INLINE_GETTER_TAG + getter.getterID + '"/>';
