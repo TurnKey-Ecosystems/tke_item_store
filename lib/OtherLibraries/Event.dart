@@ -39,22 +39,16 @@ class Event {
   final List<Function?> listeners;
   final _EventTriggerWrapper _trigger;
 
-  bool get listenersIsModifiable {
-    bool isModifiable = true;
-    try {
-      listeners.add(null);
-    } catch (e) {
-      isModifiable = false;
-    }
-    return isModifiable;
-  }
+  final bool listenersIsModifiable;
 
   Event()
       : listeners = [],
+        listenersIsModifiable = true,
         _trigger = _EventTriggerWrapperChanging();
 
   const Event.unchanging()
       : listeners = const [],
+        listenersIsModifiable = false,
         _trigger = const _EventTriggerWrapperUnchanging();
 
   Future<void> addListener(Function? listener) async {
