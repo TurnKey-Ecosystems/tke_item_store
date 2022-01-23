@@ -1,8 +1,43 @@
 import 'dart:developer';
-import 'dart:collection' as D_Collections;
+
+abstract class _EventTriggerWrapper {
+  bool get isProcessingTrigger;
+  void call(List<Function?> listeners);
+}
+
+class _EventTriggerWrapperUnchanging implements _EventTriggerWrapper {
+  final bool isProcessingTrigger;
+  void call(List<Function?> listeners) {}
+  const _EventTriggerWrapperUnchanging() : isProcessingTrigger = false;
+}
+
+class _EventTriggerWrapperChanging implements _EventTriggerWrapper {
+  int _triggerCount = 0;
+  bool get isProcessingTrigger => _triggerCount > 0;
+  void call(List<Function?> listeners) {
+    _triggerCount++;
+    int nullListenerCount = 0;
+    for (Function? listener in listeners) {
+      if (listener != null) {
+        try {
+          listener();
+        } catch (e) {
+          log(e.toString());
+        }
+      } else {
+        nullListenerCount++;
+      }
+    }
+    for (; nullListenerCount > 0; nullListenerCount--) {
+      listeners.remove(null);
+    }
+    _triggerCount--;
+  }
+}
 
 class Event {
   final List<Function?> listeners;
+  final _EventTriggerWrapper _trigger;
 
   bool get listenersIsModifiable {
     bool isModifiable = true;
@@ -14,37 +49,36 @@ class Event {
     return isModifiable;
   }
 
-  Event() : listeners = [];
+  Event()
+      : listeners = [],
+        _trigger = _EventTriggerWrapperChanging();
 
-  const Event.unchanging() : listeners = const [];
+  const Event.unchanging()
+      : listeners = const [],
+        _trigger = const _EventTriggerWrapperUnchanging();
 
-  void addListener(Function? listener) {
+  Future<void> addListener(Function? listener) async {
+    await _when(() => _trigger.isProcessingTrigger == false);
     if (listener != null && listenersIsModifiable) {
       listeners.add(listener);
     }
   }
 
-  void removeListener(Function? listener) {
+  Future<void> removeListener(Function? listener) async {
+    await _when(() => _trigger.isProcessingTrigger == false);
     if (listenersIsModifiable) {
       listeners.remove(listener);
     }
   }
 
   void trigger() {
-    int nullListenerCount = 0;
-    for (Function? listener in listeners) {
-      if (listener != null) {
-        try {
-          listener();
-        } catch(e) {
-          log(e.toString());
-        }
-      } else {
-        nullListenerCount++;
-      }
-    }
-    for (; nullListenerCount > 0; nullListenerCount--) {
-      removeListener(null);
+    _trigger(listeners);
+  }
+
+  static Future<void> _when(bool Function() condition) async {
+    // Wait until the condition has been met
+    while (!condition()) {
+      await Future.delayed(const Duration(milliseconds: 100));
     }
   }
 }
