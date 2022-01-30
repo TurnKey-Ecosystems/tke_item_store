@@ -5,14 +5,14 @@ extension ToObservableSet<ElementType> on Set<Getter<ElementType>> {
   /// Convert the set into a variable version of an observable set
   Value<ObservableSet<ElementType>> get v {
     return Value.ofNewVariable(
-      ObservableSet.fromSet(this),
+      ObservableSet(source: this),
     );
   }
 
   /// Convert the set into a getter version of an observable set
   Getter<ObservableSet<ElementType>> get g {
     return Getter.ofNewVariable(
-      ObservableSet.fromSet(this),
+      ObservableSet(source: this),
     );
   }
 }
@@ -44,13 +44,8 @@ class ObservableSet<ElementType> implements Iterable<Getter<ElementType>> {
   }
 
   /// Create a new set
-  ObservableSet()
-      : _elements = Set(),
-        onContentChanged = Event();
-
-  /// Create a new set from a dart set
-  ObservableSet.fromSet(Set<Getter<ElementType>> set)
-      : _elements = set,
+  ObservableSet({Set<Getter<ElementType>>? source})
+      : _elements = source ?? Set(),
         onContentChanged = Event();
 
   /// Create an unchanging observable set

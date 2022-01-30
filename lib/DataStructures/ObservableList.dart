@@ -5,14 +5,14 @@ extension ToObservableList<ElementType> on List<Getter<ElementType>> {
   /// Convert the list into a variable version of an observable list
   Value<ObservableList<ElementType>> get v {
     return Value.ofNewVariable(
-      ObservableList.fromList(this),
+      ObservableList(source: this),
     );
   }
 
   /// Convert the list into a getter version of an observable list
   Getter<ObservableList<ElementType>> get g {
     return Getter.ofNewVariable(
-      ObservableList.fromList(this),
+      ObservableList(source: this),
     );
   }
 }
@@ -59,13 +59,8 @@ class ObservableList<ElementType> implements Iterable<Getter<ElementType>> {
   }
 
   /// Create a new list
-  ObservableList()
-      : _elements = [],
-        onContentChanged = Event();
-
-  /// Create a new list from a dart list
-  ObservableList.fromList(List<Getter<ElementType>> list)
-      : _elements = list,
+  ObservableList({List<Getter<ElementType>> source = const []})
+      : _elements = source,
         onContentChanged = Event();
 
   /// Create an unchanging observable list
