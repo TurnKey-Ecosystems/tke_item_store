@@ -1,5 +1,22 @@
 part of tke_item_store;
 
+/// Converts normal lists into observable lists
+extension ToObservableList<ElementType> on List<Getter<ElementType>> {
+  /// Convert the list into a variable version of an observable list
+  Value<ObservableList<ElementType>> get v {
+    return Value.ofNewVariable(
+      ObservableList.fromList(this),
+    );
+  }
+
+  /// Convert the list into a getter version of an observable list
+  Getter<ObservableList<ElementType>> get g {
+    return Getter.ofNewVariable(
+      ObservableList.fromList(this),
+    );
+  }
+}
+
 /// Defines an observable version of a list
 class ObservableList<ElementType> implements Iterable<Getter<ElementType>> {
   /// This is the list that is being wrapped
