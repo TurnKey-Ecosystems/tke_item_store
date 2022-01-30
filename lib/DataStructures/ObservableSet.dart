@@ -1,76 +1,61 @@
 part of tke_item_store;
 
-/// Converts normal lists into observable lists
-extension ToObservableList<ElementType> on List<Getter<ElementType>> {
-  /// Convert the list into a variable version of an observable list
-  Value<ObservableList<ElementType>> get v {
+/// Converts normal sets into observable sets
+extension ToObservableSet<ElementType> on Set<Getter<ElementType>> {
+  /// Convert the set into a variable version of an observable set
+  Value<ObservableSet<ElementType>> get v {
     return Value.ofNewVariable(
-      ObservableList.fromList(this),
+      ObservableSet.fromSet(this),
     );
   }
 
-  /// Convert the list into a getter version of an observable list
-  Getter<ObservableList<ElementType>> get g {
+  /// Convert the set into a getter version of an observable set
+  Getter<ObservableSet<ElementType>> get g {
     return Getter.ofNewVariable(
-      ObservableList.fromList(this),
+      ObservableSet.fromSet(this),
     );
   }
 }
 
-/// Defines an observable version of a list
-class ObservableList<ElementType> implements Iterable<Getter<ElementType>> {
-  /// This is the list that is being wrapped
-  final List<Getter<ElementType>> _elements;
+/// Defines an observable version of a set
+class ObservableSet<ElementType> implements Iterable<Getter<ElementType>> {
+  /// This is the set that is being wrapped
+  final Set<Getter<ElementType>> _elements;
 
-  /// This is fired when the contents of the list change
+  /// This is fired when the contents of the set change
   final Event onContentChanged;
 
-  /// Get the element at the given index
-  Getter<ElementType>? operator [](int index) {
-    if (_elements.length > index) {
-      return _elements[index];
-    } else {
-      return null;
-    }
-  }
-
-  /// Overwrite the element at the given index
-  void operator []=(int index, Getter<ElementType> element) {
-    _elements[index] = element;
-    onContentChanged.trigger();
-  }
-
-  /// Add an element to the list
+  /// Add an element to the set
   void add(Getter<ElementType> element) {
     _elements.add(element);
     onContentChanged.trigger();
   }
 
-  /// Add a list of elements to the list
+  /// Add a set of elements to the set
   void addAll(Iterable<Getter<ElementType>> elements) {
     _elements.addAll(elements);
     onContentChanged.trigger();
   }
 
-  /// Remove an element from the list
+  /// Remove an element from the set
   void remove(Getter<ElementType> element) {
     _elements.remove(element);
     onContentChanged.trigger();
   }
 
-  /// Create a new list
-  ObservableList()
-      : _elements = [],
+  /// Create a new set
+  ObservableSet()
+      : _elements = Set(),
         onContentChanged = Event();
 
-  /// Create a new list from a dart list
-  ObservableList.fromList(List<Getter<ElementType>> list)
-      : _elements = list,
+  /// Create a new set from a dart set
+  ObservableSet.fromSet(Set<Getter<ElementType>> set)
+      : _elements = set,
         onContentChanged = Event();
 
-  /// Create an unchanging observable list
-  const ObservableList.constList(List<Getter<ElementType>> list)
-      : _elements = list,
+  /// Create an unchanging observable set
+  const ObservableSet.constSet(Set<Getter<ElementType>> set)
+      : _elements = set,
         onContentChanged = const Event.unchanging();
 
   @override
@@ -215,7 +200,7 @@ class ObservableList<ElementType> implements Iterable<Getter<ElementType>> {
   }
 
   @override
-  Set<Getter<ElementType>> toSet() {
+  Set<Getter<ElementType>> toSet({bool growable = true}) {
     return _elements.toSet();
   }
 
