@@ -22,8 +22,21 @@ class ObservableList<ElementType> implements Iterable<Getter<ElementType>> {
   /// This is the list that is being wrapped
   final List<Getter<ElementType>> _elements;
 
-  /// This is fired when the contents of the list change
-  final Event onContentChanged;
+  /// This is fired when an element is added to or removed from the list
+  final Event onElementAddedOrRemoved;
+
+  /// This is fired when any of the elements fires its on change event
+  final Event onAnyElementsChangeEventTriggered;
+
+  /// Sets up a onAnyElementsChangeEventTriggered event from a source list
+  static Event buildOnAnyElementsChangeEventTriggeredFromSource<ElementType>(
+      Iterable<Getter<ElementType>> source) {
+    Event newEvent = Event();
+    for (Getter<ElementType> element in source) {
+      element.onAfterChange.addListener(newEvent.trigger);
+    }
+    return newEvent;
+  }
 
   /// Get the element at the given index
   Getter<ElementType>? operator [](int index) {
@@ -36,37 +49,56 @@ class ObservableList<ElementType> implements Iterable<Getter<ElementType>> {
 
   /// Overwrite the element at the given index
   void operator []=(int index, Getter<ElementType> element) {
+    _elements[index]
+        .onAfterChange
+        .removeListener(onAnyElementsChangeEventTriggered.trigger);
     _elements[index] = element;
-    onContentChanged.trigger();
+    element.onAfterChange
+        .addListener(onAnyElementsChangeEventTriggered.trigger);
+    onElementAddedOrRemoved.trigger();
   }
 
   /// Add an element to the list
   void add(Getter<ElementType> element) {
     _elements.add(element);
-    onContentChanged.trigger();
+    element.onAfterChange
+        .addListener(onAnyElementsChangeEventTriggered.trigger);
+    onElementAddedOrRemoved.trigger();
   }
 
   /// Add a list of elements to the list
   void addAll(Iterable<Getter<ElementType>> elements) {
-    _elements.addAll(elements);
-    onContentChanged.trigger();
+    for (Getter<ElementType> element in elements) {
+      _elements.add(element);
+      element.onAfterChange
+          .addListener(onAnyElementsChangeEventTriggered.trigger);
+    }
+    onElementAddedOrRemoved.trigger();
   }
 
   /// Remove an element from the list
   void remove(Getter<ElementType> element) {
+    _elements
+        .firstWhere(
+            (Getter<ElementType> elementToCheck) => element == elementToCheck)
+        .onAfterChange
+        .removeListener(onAnyElementsChangeEventTriggered.trigger);
     _elements.remove(element);
-    onContentChanged.trigger();
+    onElementAddedOrRemoved.trigger();
   }
 
   /// Create a new list
-  ObservableList({List<Getter<ElementType>> source = const []})
-      : _elements = source,
-        onContentChanged = Event();
+  ObservableList({Iterable<Getter<ElementType>> source = const []})
+      : _elements = List.from(source),
+        onElementAddedOrRemoved = Event(),
+        onAnyElementsChangeEventTriggered =
+            buildOnAnyElementsChangeEventTriggeredFromSource(source);
 
   /// Create an unchanging observable list
-  const ObservableList.constList(List<Getter<ElementType>> list)
-      : _elements = list,
-        onContentChanged = const Event.unchanging();
+  const ObservableList.constList()
+      : _elements = const [],
+        onElementAddedOrRemoved = const Event.unchanging(),
+        onAnyElementsChangeEventTriggered = const Event.unchanging();
 
   @override
   bool any(bool Function(Getter<ElementType> element) test) {

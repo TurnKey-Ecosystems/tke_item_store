@@ -23,35 +23,48 @@ class ObservableSet<ElementType> implements Iterable<Getter<ElementType>> {
   final Set<Getter<ElementType>> _elements;
 
   /// This is fired when the contents of the set change
-  final Event onContentChanged;
+  final Event onElementAddedOrRemoved;
+
+  /// This is fired when any of the elements fires its on change event
+  final Event onAnyElementsChangeEventTriggered;
 
   /// Add an element to the set
   void add(Getter<ElementType> element) {
     _elements.add(element);
-    onContentChanged.trigger();
+    element.onAfterChange
+        .addListener(onAnyElementsChangeEventTriggered.trigger);
+    onElementAddedOrRemoved.trigger();
   }
 
   /// Add a set of elements to the set
   void addAll(Iterable<Getter<ElementType>> elements) {
-    _elements.addAll(elements);
-    onContentChanged.trigger();
+    for (Getter<ElementType> element in elements) {
+      _elements.add(element);
+      element.onAfterChange
+          .addListener(onAnyElementsChangeEventTriggered.trigger);
+    }
+    onElementAddedOrRemoved.trigger();
   }
 
   /// Remove an element from the set
   void remove(Getter<ElementType> element) {
+    _elements
+        .firstWhere(
+            (Getter<ElementType> elementToCheck) => element == elementToCheck)
+        .onAfterChange
+        .removeListener(onAnyElementsChangeEventTriggered.trigger);
     _elements.remove(element);
-    onContentChanged.trigger();
+    onElementAddedOrRemoved.trigger();
   }
 
   /// Create a new set
   ObservableSet({Set<Getter<ElementType>>? source})
       : _elements = source ?? Set(),
-        onContentChanged = Event();
-
-  /// Create an unchanging observable set
-  const ObservableSet.constSet(Set<Getter<ElementType>> set)
-      : _elements = set,
-        onContentChanged = const Event.unchanging();
+        onElementAddedOrRemoved = Event(),
+        onAnyElementsChangeEventTriggered = source != null
+            ? ObservableList.buildOnAnyElementsChangeEventTriggeredFromSource(
+                source)
+            : Event();
 
   @override
   bool any(bool Function(Getter<ElementType> element) test) {
