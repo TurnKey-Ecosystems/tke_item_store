@@ -17,6 +17,23 @@ extension ToObservableSet<ElementType> on Set<Getter<ElementType>> {
   }
 }
 
+/// Converts normal sets with nullable elementsinto observable sets
+extension ToObservableSetNullable<ElementType> on Set<Getter<ElementType?>> {
+  /// Convert the set into a variable version of an observable set
+  Value<ObservableSet<ElementType?>> get v {
+    return Value.ofNewVariable(
+      ObservableSet(source: this),
+    );
+  }
+
+  /// Convert the set into a getter version of an observable set
+  Getter<ObservableSet<ElementType?>> get g {
+    return Getter.ofNewVariable(
+      ObservableSet(source: this),
+    );
+  }
+}
+
 /// Defines an observable version of a set
 class ObservableSet<ElementType> implements Iterable<Getter<ElementType>> {
   /// This is the set that is being wrapped
