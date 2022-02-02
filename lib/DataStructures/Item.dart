@@ -28,7 +28,6 @@ abstract class Item {
 
   /// Only use this if you know what you are doing.
   void setReference(String newItemID) {
-    print('setReference() called!');
     _itemID.value = newItemID;
   }
 
@@ -90,8 +89,7 @@ abstract class Item {
     this._oldItemID = ''.v;
     this._oldItemID.value = itemID.value;
     _itemManager.value.onDelete.addListener(onDelete.trigger);
-    this._itemID.onAfterChange.addListener(() {
-      print('_itemID changed!');
+    this.itemID.onAfterChange.addListener(() {
       // Stop listening to the old item instance
       AllItemsManager.getItemInstance(_oldItemID.value)
           ?.onDelete
@@ -101,7 +99,6 @@ abstract class Item {
       // Start listening to changes in the new item instance
       _itemManager.value.onDelete.addListener(onDelete.trigger);
     });
-    this.itemID.onAfterChange.addListener(() => print('itemID changed!'));
   }
 
   /** Sets up all the attributes in this item */
