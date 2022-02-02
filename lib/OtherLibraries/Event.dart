@@ -83,14 +83,35 @@ class Event {
   void unsubscribeFrom(Event event) {
     trigger.unsubscribeFrom(event);
   }
+
+  List<Event?> get subscriptions => trigger.subscriptions;
 }
 
 extension on Function() {
   void subscribeTo(Event event) {
+    _recordSubscription(
+      hashcode: this.hashCode,
+      event: event,
+    );
     event.addListener(this);
   }
 
   void unsubscribeFrom(Event event) {
     event.removeListener(this);
+    _subscriptionsByFunctionHashcode[this.hashCode]?.remove(event);
   }
+
+  static Map<int, List<Event?>> _subscriptionsByFunctionHashcode = Map();
+  static void _recordSubscription({
+    required int hashcode,
+    required Event? event,
+  }) {
+    if (!_subscriptionsByFunctionHashcode.containsKey(hashcode)) {
+      _subscriptionsByFunctionHashcode[hashcode] = [];
+    }
+    _subscriptionsByFunctionHashcode[hashcode]!.add(event);
+  }
+
+  List<Event?> get subscriptions =>
+      _subscriptionsByFunctionHashcode[this.hashCode] ?? [];
 }
