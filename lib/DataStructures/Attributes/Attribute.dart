@@ -46,9 +46,9 @@ abstract class Attribute {
     this._itemManager = itemManager;
 
     // Respond to changes in the item managers
+    attributeInstance.value.onAfterChange.addListener(onAfterChange.trigger);
     _oldItemID = ''.v;
     _oldItemID.value = _itemManager.value.itemID;
-    attributeInstance.onAfterChange.addListener(onAfterChange.trigger);
     _itemManager.onAfterChange.addListener(() {
       // Stop listening to the old item instance
       AllItemsManager.getItemInstance(_oldItemID.value)
@@ -58,7 +58,7 @@ abstract class Attribute {
       _oldItemID.value = _itemManager.value.itemID;
 
       // Start listening to changes in the new item instance
-      attributeInstance.onAfterChange.addListener(onAfterChange.trigger);
+      attributeInstance.value.onAfterChange.addListener(onAfterChange.trigger);
     });
   }
 
