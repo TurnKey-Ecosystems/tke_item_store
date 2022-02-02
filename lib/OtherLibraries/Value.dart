@@ -118,11 +118,13 @@ class _VariableWrapper<VariableType> {
 
   void setValue(VariableType newValue) {
     if (VariableType is Item) {
+      print('_VariableWrapper.setValue() thinks it IS an Item!');
       newValue as Item;
       if ((_variable as Item).itemID.value != newValue.itemID.value) {
         (_variable as Item).setReference(newValue.itemID.value);
       }
     } else {
+      print('_VariableWrapper.setValue() thinks it is NOT an Item!');
       if (_variable != newValue) {
         _variable = newValue;
         onAfterChange.trigger();
