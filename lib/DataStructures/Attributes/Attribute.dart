@@ -50,6 +50,7 @@ abstract class Attribute {
     _oldItemID = ''.v;
     _oldItemID.value = _itemManager.value.itemID;
     _itemManager.onAfterChange.addListener(() {
+      print('_itemManager.onAfterChange triggered!');
       // Stop listening to the old item instance
       AllItemsManager.getItemInstance(_oldItemID.value)
           ?.getAttributeInstance(attributeKey: attributeKey)

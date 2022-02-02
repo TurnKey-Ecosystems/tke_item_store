@@ -102,7 +102,6 @@ abstract class Item {
       _itemManager.value.onDelete.addListener(onDelete.trigger);
     });
     this.itemID.onAfterChange.addListener(() => print('itemID changed!'));
-    print('If you can see this, then print() works for logs.');
   }
 
   /** Sets up all the attributes in this item */
