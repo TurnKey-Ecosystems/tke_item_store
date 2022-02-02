@@ -82,6 +82,7 @@ abstract class Item {
 
   void attatchOnDeleteToItemManager() {
     // Respond to changes in the
+    this._oldItemID = ''.v;
     this._oldItemID.value = itemID.value;
     this.itemID.onAfterChange.addListener(() {
       // Stop listening to the old item instance

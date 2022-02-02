@@ -46,6 +46,7 @@ abstract class Attribute {
     this._itemManager = itemManager;
 
     // Respond to changes in the item managers
+    _oldItemID = ''.v;
     _oldItemID.value = _itemManager.value.itemID;
     _itemManager.onAfterChange.addListener(() {
       // Stop listening to the old item instance
