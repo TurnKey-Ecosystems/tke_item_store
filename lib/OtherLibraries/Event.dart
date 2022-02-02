@@ -75,4 +75,22 @@ class Event {
       await Future.delayed(const Duration(milliseconds: 100));
     }
   }
+
+  void subscribeTo(Event event) {
+    trigger.subscribeTo(event);
+  }
+
+  void unsubscribeFrom(Event event) {
+    trigger.unsubscribeFrom(event);
+  }
+}
+
+extension on Function() {
+  void subscribeTo(Event event) {
+    event.addListener(this);
+  }
+
+  void unsubscribeFrom(Event event) {
+    event.removeListener(this);
+  }
 }
