@@ -60,6 +60,9 @@ abstract class Attribute {
 
       // Start listening to changes in the new item instance
       attributeInstance.value.onAfterChange.addListener(onAfterChange.trigger);
+
+      // The item instance has changed so the attribute has changed.
+      onAfterChange.trigger();
     });
   }
 
