@@ -117,15 +117,12 @@ class _VariableWrapper<VariableType> {
   }
 
   void setValue(VariableType newValue) {
-    if (VariableType is Item) {
-      print('_VariableWrapper.setValue() thinks "${VariableType}" IS an Item!');
+    if (_variable is Item) {
       newValue as Item;
       if ((_variable as Item).itemID.value != newValue.itemID.value) {
         (_variable as Item).setReference(newValue.itemID.value);
       }
     } else {
-      print(
-          '_VariableWrapper.setValue() thinks "${VariableType}" is NOT an Item!');
       if (_variable != newValue) {
         _variable = newValue;
         onAfterChange.trigger();
@@ -134,9 +131,8 @@ class _VariableWrapper<VariableType> {
   }
 
   _VariableWrapper(this._variable)
-      : this.onAfterChange = (VariableType is Item)
-            ? (_variable as Item).itemID.onAfterChange
-            : Event();
+      : this.onAfterChange =
+            (_variable is Item) ? _variable.itemID.onAfterChange : Event();
 }
 
 extension VariableToGetterOrValue<ValueType> on ValueType {
