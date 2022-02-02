@@ -1,6 +1,5 @@
 part of tke_item_store;
 
-
 // Acts a a control pannel for an item instance
 abstract class Item {
   // We can't require subtypes to provide an itemType, so this is the best we can do.
@@ -16,27 +15,36 @@ abstract class Item {
   );
 
   // The instnace of this item
-  SingleItemManager? _itemManager;
-
+  late final Getter<SingleItemManager> _itemManager = Computed(
+    () => AllItemsManager.getItemInstance(itemID.value)!,
+    recomputeTriggers: [
+      itemID.onAfterChange,
+    ],
+  );
 
   // Expose the itemID for getting
-  String itemID = '';
+  late final Value<String> _itemID;
+  late final Getter<String> itemID = _itemID;
 
+  /// Only use this if you know what you are doing.
+  void setReference(String newItemID) {
+    _itemID.value = newItemID;
+  }
 
   // Expose the onDelete event for listeners
-  Event get onDelete {
-    return _itemManager!.onDelete;
-  }
-  
+  late final Value<String> _oldItemID;
+  final Event onDelete = Event();
 
   /// Item subtypes should override this
-  List<Attribute> getAllAttributes() { return []; }
+  List<Attribute> getAllAttributes() {
+    return [];
+  }
+
   List<Attribute> _getAllAttributes() {
     List<Attribute> allAttributes = getAllAttributes();
     allAttributes.add(_containedIn);
     return allAttributes;
   }
-
 
   /**Creates a new item */
   Item.createNew() {
@@ -44,49 +52,57 @@ abstract class Item {
     List<Change> changes = [];
 
     // Create the item creation change
-    this.itemID = AllItemsManager.requestNewItemID(itemType: itemType);
+    this._itemID = AllItemsManager.requestNewItemID(itemType: itemType).v;
     changes.add(
       ChangeItemCreation(
         changeApplicationDepth: SyncDepth.CLOUD,
         itemType: itemType,
-        itemID: itemID,
+        itemID: itemID.value,
       ),
     );
 
     // Create an attribute init change for each attribute
     for (Attribute attribute in _getAllAttributes()) {
       changes.add(
-        attribute.getAttributeInitChange(itemID: itemID),
+        attribute.getAttributeInitChange(itemID: itemID.value),
       );
     }
 
     // Create the new item isntance
     AllItemsManager.applyChangesIfRelevant(changes: changes);
-    
-    // Record the new item instance
-    _itemManager = AllItemsManager.getItemInstance(itemID)!;
 
     // Wire up the attributes
     _connectAttributesToAttributeInstances();
   }
 
   /** Creates a new item control pannel for the item with the given itemID. */
-  Item.fromItemID(String itemID) {
-    this.itemID = itemID;
-    _itemManager = AllItemsManager.getItemInstance(itemID)!;
+  Item.fromItemID(this._itemID) {
     _connectAttributesToAttributeInstances();
   }
 
+  void attatchOnDeleteToItemManager() {
+    // Respond to changes in the
+    this._oldItemID.value = itemID.value;
+    this.itemID.onAfterChange.addListener(() {
+      // Stop listening to the old item instance
+      AllItemsManager.getItemInstance(_oldItemID.value)
+          ?.onDelete
+          .removeListener(onDelete.trigger);
+      _oldItemID.value = itemID.value;
+
+      // Start listening to changes in the new item instance
+      _itemManager.value.onDelete.addListener(onDelete.trigger);
+    });
+  }
 
   /** Sets up all the attributes in this item */
   void _connectAttributesToAttributeInstances() {
     for (Attribute attribute in _getAllAttributes()) {
       attribute.connectToAttributeInstance(
-        itemManager: _itemManager!,
+        itemManager: _itemManager,
       );
     }
   }
-
 
   /** Permanently delete this item */
   void delete() {
@@ -96,7 +112,7 @@ abstract class Item {
     changes.add(
       ChangeItemDeletion(
         itemType: itemType,
-        itemID: itemID,
+        itemID: itemID.value,
         changeApplicationDepth: SyncDepth.CLOUD,
       ),
     );
@@ -121,7 +137,6 @@ abstract class Item {
       changes: changes,
     );
   }
-
 
   // Items are identified by their itemID
   @override

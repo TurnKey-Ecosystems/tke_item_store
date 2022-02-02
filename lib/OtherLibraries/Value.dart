@@ -2,9 +2,7 @@ import 'package:tke_item_store/project_library.dart';
 
 import 'Event.dart';
 
-class Value<ValueType>
-    with Getter<ValueType>, Setter<ValueType>
-    implements G<ValueType>, S<ValueType> {
+class Value<ValueType> with Getter<ValueType>, Setter<ValueType> {
   ValueType Function() _getValue = (() => null as ValueType);
   ValueType getValue() {
     return _getValue();
@@ -27,19 +25,6 @@ class Value<ValueType>
       trigger?.addListener(_onAfterChange.trigger);
     });
   }
-}
-
-class V<ValueType> extends Value<ValueType> {
-  V(ValueType initialValue) : super.ofNewVariable(initialValue);
-  V.f({
-    required ValueType Function() get,
-    required void Function(ValueType newValue) set,
-    List<Event?>? onAfterChangeTriggers,
-  }) : super.fromFunctions(
-          get: get,
-          set: set,
-          onAfterChangeTriggers: onAfterChangeTriggers,
-        );
 }
 
 abstract class Getter<ValueType> {
@@ -106,17 +91,6 @@ class ConstGetter<ValueType> implements Getter<ValueType> {
   int get hashCode => getValue().hashCode;
 }
 
-class G<ValueType> extends Getter<ValueType> {
-  ValueType getValue() => null as ValueType;
-  factory G(ValueType initialValue) => Value.ofNewVariable(initialValue);
-  factory G.f(ValueType Function() get,
-          {List<Event?>? onAfterChangeTriggers}) =>
-      Value.fromFunctions(
-          get: get,
-          set: ((_) => null),
-          onAfterChangeTriggers: onAfterChangeTriggers);
-}
-
 abstract class Setter<ValueType> {
   /// This is initialized with a stand-in, it must be replaced in the constructor!
   void Function(ValueType newValue) _setValue = ((_) => null);
@@ -129,33 +103,37 @@ abstract class Setter<ValueType> {
   }
 
   static Setter<ValueType> ofNewVariable<ValueType>(ValueType initialValue) =>
-      S.v(initialValue);
+      Value.ofNewVariable(initialValue);
   static Setter<ValueType> fromFunction<ValueType>(
           void Function(ValueType newValue) set) =>
-      S(set);
-}
-
-class S<ValueType> extends Setter<ValueType> {
-  factory S.v(ValueType initialValue) => Value.ofNewVariable(initialValue);
-  factory S(void Function(ValueType newValue) set) =>
       Value.fromFunctions(set: set, get: (() => null as ValueType));
 }
 
 class _VariableWrapper<VariableType> {
-  Event onAfterChange = Event();
+  final Event onAfterChange;
   VariableType _variable;
   VariableType getValue() {
     return _variable;
   }
 
   void setValue(VariableType newValue) {
-    if (_variable != newValue) {
-      _variable = newValue;
-      onAfterChange.trigger();
+    if (VariableType is Item) {
+      newValue as Item;
+      if ((_variable as Item).itemID.value != newValue.itemID.value) {
+        (_variable as Item).setReference(newValue.itemID.value);
+      }
+    } else {
+      if (_variable != newValue) {
+        _variable = newValue;
+        onAfterChange.trigger();
+      }
     }
   }
 
-  _VariableWrapper(this._variable);
+  _VariableWrapper(this._variable)
+      : this.onAfterChange = (VariableType is Item)
+            ? (_variable as Item).itemID.onAfterChange
+            : Event();
 }
 
 extension VariableToGetterOrValue<ValueType> on ValueType {

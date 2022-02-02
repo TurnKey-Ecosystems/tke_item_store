@@ -1,22 +1,22 @@
 part of tke_item_store;
 
-
 // Provides a control pannel for an instance of a property type attribute
-abstract class _AttributeProperty<PropertyType> extends Attribute implements Value<PropertyType> {
+abstract class _AttributeProperty<PropertyType> extends Attribute
+    implements Value<PropertyType> {
   /// Register witht he getter store
   late final String getterID = GetterStore.registerWithGetterStore(this);
-  
+
   // TODO: Implementing BasicValueWrapper requies us to have this. Fix that in future.
   late PropertyType _value;
 
   // Expose the value of the attribute
   PropertyType get value {
-    return attributeInstance!.valueAsProperty;
+    return attributeInstance.value.valueAsProperty;
   }
+
   PropertyType getValue() {
     return value;
   }
-
 
   // Changes to the attribute made through this class are considered local changes
   void set value(PropertyType newValue) {
@@ -24,34 +24,31 @@ abstract class _AttributeProperty<PropertyType> extends Attribute implements Val
       changes: [
         ChangeAttributeSetValue(
           changeApplicationDepth: syncDepth,
-          itemID: attributeInstance!.itemID,
+          itemID: _itemManager.value.itemID,
           attributeKey: attributeKey,
           value: newValue,
         ),
       ],
     );
   }
+
   void setValue(PropertyType newValue) {
     value = newValue;
   }
 
-
   // This is the value this attribute should have when it's item is first created.
   final PropertyType valueOnCreateNew;
-
 
   // Creates a new property attribute
   _AttributeProperty({
     required String attributeKey,
     required SyncDepth syncDepth,
     required this.valueOnCreateNew,
-  })
-    : _value = valueOnCreateNew,
-      super(
-        attributeKey: attributeKey,
-        syncDepth: syncDepth,
-      );
-
+  })  : _value = valueOnCreateNew,
+        super(
+          attributeKey: attributeKey,
+          syncDepth: syncDepth,
+        );
 
   /** Gets the attribute init change object for this attribute. */
   @override
@@ -65,14 +62,12 @@ abstract class _AttributeProperty<PropertyType> extends Attribute implements Val
       value: valueOnCreateNew,
     );
   }
-  
+
   @override
   String toString() {
     return GetterStore.getterToString(this);
   }
 }
-
-
 
 // Provides a control pannel for an instance of a boolean attribute
 class AttributeBool extends _AttributeProperty<bool> {
@@ -81,13 +76,10 @@ class AttributeBool extends _AttributeProperty<bool> {
     required SyncDepth syncDepth,
     required bool valueOnCreateNew,
   }) : super(
-    attributeKey: attributeKey,
-    syncDepth: syncDepth,
-    valueOnCreateNew: valueOnCreateNew
-  );
+            attributeKey: attributeKey,
+            syncDepth: syncDepth,
+            valueOnCreateNew: valueOnCreateNew);
 }
-
-
 
 // Provides a control pannel for an instance of an int attribute
 class AttributeInt extends _AttributeProperty<int> {
@@ -96,13 +88,10 @@ class AttributeInt extends _AttributeProperty<int> {
     required SyncDepth syncDepth,
     required int valueOnCreateNew,
   }) : super(
-    attributeKey: attributeKey,
-    syncDepth: syncDepth,
-    valueOnCreateNew: valueOnCreateNew
-  );
+            attributeKey: attributeKey,
+            syncDepth: syncDepth,
+            valueOnCreateNew: valueOnCreateNew);
 }
-
-
 
 // Provides a control pannel for an instance of a double attribute
 class AttributeDouble extends _AttributeProperty<double> {
@@ -111,13 +100,10 @@ class AttributeDouble extends _AttributeProperty<double> {
     required SyncDepth syncDepth,
     required double valueOnCreateNew,
   }) : super(
-    attributeKey: attributeKey,
-    syncDepth: syncDepth,
-    valueOnCreateNew: valueOnCreateNew
-  );
+            attributeKey: attributeKey,
+            syncDepth: syncDepth,
+            valueOnCreateNew: valueOnCreateNew);
 }
-
-
 
 // Provides a control pannel for an instance of a String attribute
 class AttributeString extends _AttributeProperty<String> {
@@ -126,22 +112,19 @@ class AttributeString extends _AttributeProperty<String> {
     required SyncDepth syncDepth,
     required String valueOnCreateNew,
   }) : super(
-    attributeKey: attributeKey,
-    syncDepth: syncDepth,
-    valueOnCreateNew: valueOnCreateNew
-  );
+            attributeKey: attributeKey,
+            syncDepth: syncDepth,
+            valueOnCreateNew: valueOnCreateNew);
 }
 
-
-
 // Provides a control pannel for an instance of a session exlusive object attribute
-class AttributeSessionObject<ObjectType> extends _AttributeProperty<ObjectType> {
+class AttributeSessionObject<ObjectType>
+    extends _AttributeProperty<ObjectType> {
   AttributeSessionObject({
     required String attributeKey,
     required ObjectType valueOnCreateNew,
   }) : super(
-    attributeKey: attributeKey,
-    syncDepth: SyncDepth.SESSION,
-    valueOnCreateNew: valueOnCreateNew
-  );
+            attributeKey: attributeKey,
+            syncDepth: SyncDepth.SESSION,
+            valueOnCreateNew: valueOnCreateNew);
 }

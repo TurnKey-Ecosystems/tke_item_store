@@ -2,23 +2,35 @@ part of tke_item_store;
 
 // Models an attribute instance
 abstract class Attribute {
-  // The attribute instance that this Attribute models
-  InstanceOfAttribute? attributeInstance;
+  late final Getter<SingleItemManager> _itemManager;
 
+  // The attribute instance that this Attribute models
+  late final Getter<InstanceOfAttribute> attributeInstance = Computed(
+    () {
+      // Ensure that an instance of this attribute exists
+      if (_itemManager.value.getAttributeInstance(attributeKey: attributeKey) ==
+          null) {
+        AllItemsManager.applyChangesIfRelevant(changes: [
+          getAttributeInitChange(itemID: _itemManager.value.itemID),
+        ]);
+      }
+      return _itemManager.value
+          .getAttributeInstance(attributeKey: attributeKey)!;
+    },
+    recomputeTriggers: [
+      _itemManager.onAfterChange,
+    ],
+  );
 
   // We'll expose the on-after-change event of the attribute instance.
-  Event get onAfterChange {
-    return attributeInstance!.onAfterChange;
-  }
-
+  late final Value<String> _oldItemID;
+  late final Event onAfterChange = Event();
 
   // This is mainly used for storing the attribute key while the attribute is being initialized
   final String attributeKey;
 
-
   // This is mainly used for storing the syncDepth while the attribute is being initialized
   final SyncDepth syncDepth;
-
 
   // Create a new control panel for an attribute instance
   Attribute({
@@ -26,41 +38,44 @@ abstract class Attribute {
     required this.syncDepth,
   });
 
-
-
   /** This should only be called by Item */
   void connectToAttributeInstance({
-    required SingleItemManager itemManager,
+    required Getter<SingleItemManager> itemManager,
   }) {
-    // Ensure that an instance of this attribute exists
-    if (itemManager.getAttributeInstance(attributeKey: attributeKey) == null) {
-      AllItemsManager.applyChangesIfRelevant(
-        changes: [
-          getAttributeInitChange(itemID: itemManager.itemID),
-        ]
-      );
-    }
+    // Setup the item manager
+    this._itemManager = itemManager;
 
-    // Connect thist attribute to its isnstance
-    this.attributeInstance = itemManager.getAttributeInstance(attributeKey: attributeKey)!;
+    // Respond to changes in the item managers
+    _oldItemID.value = _itemManager.value.itemID;
+    _itemManager.onAfterChange.addListener(() {
+      // Stop listening to the old item instance
+      AllItemsManager.getItemInstance(_oldItemID.value)
+          ?.getAttributeInstance(attributeKey: attributeKey)
+          ?.onAfterChange
+          .removeListener(onAfterChange.trigger);
+      _oldItemID.value = _itemManager.value.itemID;
+
+      // Start listening to changes in the new item instance
+      attributeInstance.onAfterChange.addListener(onAfterChange.trigger);
+    });
   }
-
 
   /** Gets the attribute init change object for this attribute. */
   ChangeAttributeInit getAttributeInitChange({
     required String itemID,
   });
 
-
   // An attribute has a unique attributeKey within its assocaited item.
   @override
-  int get hashCode => Quiver.hash2(attributeInstance!.itemID.hashCode, attributeKey.hashCode);
+  int get hashCode =>
+      Quiver.hash2(_itemManager.value.itemID.hashCode, attributeKey.hashCode);
 
   // An attribute has a unique attributeKey within its assocaited item.
   @override
   bool operator ==(dynamic other) {
     return other is Attribute &&
-        other.attributeInstance!.itemID.hashCode == attributeInstance!.itemID.hashCode &&
+        other._itemManager.value.itemID.hashCode ==
+            _itemManager.value.itemID.hashCode &&
         other.attributeKey.hashCode == attributeKey.hashCode;
   }
 }
