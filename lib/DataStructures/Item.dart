@@ -71,12 +71,16 @@ abstract class Item {
     // Create the new item isntance
     AllItemsManager.applyChangesIfRelevant(changes: changes);
 
+    // Wire up the onDelete event
+    attatchOnDeleteToItemManager();
+
     // Wire up the attributes
     _connectAttributesToAttributeInstances();
   }
 
   /** Creates a new item control pannel for the item with the given itemID. */
   Item.fromItemID(this._itemID) {
+    attatchOnDeleteToItemManager();
     _connectAttributesToAttributeInstances();
   }
 
@@ -84,6 +88,7 @@ abstract class Item {
     // Respond to changes in the
     this._oldItemID = ''.v;
     this._oldItemID.value = itemID.value;
+    _itemManager.value.onDelete.addListener(onDelete.trigger);
     this.itemID.onAfterChange.addListener(() {
       // Stop listening to the old item instance
       AllItemsManager.getItemInstance(_oldItemID.value)

@@ -48,6 +48,7 @@ abstract class Attribute {
     // Respond to changes in the item managers
     _oldItemID = ''.v;
     _oldItemID.value = _itemManager.value.itemID;
+    attributeInstance.onAfterChange.addListener(onAfterChange.trigger);
     _itemManager.onAfterChange.addListener(() {
       // Stop listening to the old item instance
       AllItemsManager.getItemInstance(_oldItemID.value)
