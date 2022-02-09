@@ -1,7 +1,7 @@
 part of tke_item_store;
 
 // Provides a control pannel for an instance of an item attribute
-class AttributeItem<ItemClassType extends Item> extends Attribute {
+class AttributeItem<ItemClassType extends Item?> extends Attribute {
   // We can't require constructors on items, so we will us this instead.
   final ItemClassType Function(String) getItemFromItemID;
 
@@ -18,7 +18,7 @@ class AttributeItem<ItemClassType extends Item> extends Attribute {
           changeApplicationDepth: syncDepth,
           itemID: _itemManager.value.itemID,
           attributeKey: attributeKey,
-          value: newValue.itemID,
+          value: newValue?.itemID,
         ),
       ],
     );
@@ -28,8 +28,8 @@ class AttributeItem<ItemClassType extends Item> extends Attribute {
   final ItemClassType Function() getDefaultItemOnCreateNew;
 
   // This is the value this attribute should have when it's item is first created.
-  String get valueOnCreateNew {
-    return getDefaultItemOnCreateNew().itemID.value;
+  String? get valueOnCreateNew {
+    return getDefaultItemOnCreateNew()?.itemID.value;
   }
 
   // Creates a new property attribute
