@@ -24,7 +24,7 @@ class AttributeItemSet<ItemClassType extends Item> extends Attribute {
           changeApplicationDepth: syncDepth,
           itemID: _itemManager.value.itemID,
           attributeKey: attributeKey,
-          value: newItem.itemID,
+          value: newItem.itemID.value,
         ),
       ],
     );
