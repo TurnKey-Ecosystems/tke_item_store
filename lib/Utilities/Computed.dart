@@ -2,6 +2,9 @@ part of tke_item_store;
 
 /// Computes a value, and triggers an onAfterChange event whenever any of the dependencies change.
 class Computed<ValueType> implements Getter<ValueType> {
+  /// Register witht he getter store
+  late final String getterID = GetterStore.registerWithGetterStore(this);
+
   /// Triggered any time there is a new value
   final Event onAfterChange = Event();
 
@@ -19,12 +22,21 @@ class Computed<ValueType> implements Getter<ValueType> {
   Computed(
     this.computeValue,
     {
-      required List<Event> recomputeTriggers,
+      required List<Event?> recomputeTriggers,
     }
   ) {
     // If any of the dependencies change, then let listenners know
-    for (Event event in recomputeTriggers) {
-      event.addListener(onAfterChange.trigger);
+    for (Event? event in recomputeTriggers) {
+      event?.addListener(onAfterChange.trigger);
     }
   }
+  
+  @override
+  String toString() {
+    return GetterStore.getterToString(this);
+  }
+
+  bool operator ==(dynamic other) => other is Getter<ValueType> && this.value == other.value;
+  @override
+  int get hashCode => getValue().hashCode;
 }

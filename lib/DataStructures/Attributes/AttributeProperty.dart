@@ -3,12 +3,15 @@ part of tke_item_store;
 // Provides a control pannel for an instance of a property type attribute
 abstract class _AttributeProperty<PropertyType> extends Attribute
     implements Value<PropertyType> {
+  /// Register witht he getter store
+  late final String getterID = GetterStore.registerWithGetterStore(this);
+
   // TODO: Implementing BasicValueWrapper requies us to have this. Fix that in future.
   late PropertyType _value;
 
   // Expose the value of the attribute
   PropertyType get value {
-    var instanceValue = attributeInstance!.valueAsProperty;
+    var instanceValue = attributeInstance.value.valueAsProperty;
     if (PropertyType == int && !(instanceValue is int)) {
       return (instanceValue as double).toInt() as PropertyType;
     } else if (PropertyType == double && !(instanceValue is double)) {
@@ -28,7 +31,7 @@ abstract class _AttributeProperty<PropertyType> extends Attribute
       changes: [
         ChangeAttributeSetValue(
           changeApplicationDepth: syncDepth,
-          itemID: attributeInstance!.itemID,
+          itemID: _itemManager.value.itemID,
           attributeKey: attributeKey,
           value: newValue,
         ),
@@ -65,6 +68,11 @@ abstract class _AttributeProperty<PropertyType> extends Attribute
       attributeKey: attributeKey,
       value: valueOnCreateNew,
     );
+  }
+
+  @override
+  String toString() {
+    return GetterStore.getterToString(this);
   }
 }
 

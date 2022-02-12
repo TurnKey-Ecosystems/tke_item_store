@@ -1,12 +1,12 @@
 part of tke_item_store;
 
-
 /// Provides a control pannel for an instance of a set of strings attribute
 class AttributeStringSet extends Attribute {
   /// Allow devs to access the elements in this set
   Set<String> get allElements {
     Set<String> allElements = {};
-    for (String element in attributeInstance!.getAllValuesAsSet<String>()) {
+    for (String element
+        in attributeInstance.value.getAllValuesAsSet<String>()) {
       allElements.add(
         element,
       );
@@ -14,14 +14,13 @@ class AttributeStringSet extends Attribute {
     return allElements;
   }
 
-
   /// Changes to the attribute made through this class are considered local changes
   void add(String newElement) {
     AllItemsManager.applyChangesIfRelevant(
       changes: [
         ChangeAttributeAddValue(
           changeApplicationDepth: syncDepth,
-          itemID: attributeInstance!.itemID,
+          itemID: _itemManager.value.itemID,
           attributeKey: attributeKey,
           value: newElement,
         ),
@@ -35,7 +34,7 @@ class AttributeStringSet extends Attribute {
       changes: [
         ChangeAttributeRemoveValue(
           changeApplicationDepth: syncDepth,
-          itemID: attributeInstance!.itemID,
+          itemID: _itemManager.value.itemID,
           attributeKey: attributeKey,
           value: elementToRemove,
         ),
@@ -43,16 +42,14 @@ class AttributeStringSet extends Attribute {
     );
   }
 
-
   // Creates a new attribute item set
   AttributeStringSet({
     required String attributeKey,
     required SyncDepth syncDepth,
   }) : super(
-    attributeKey: attributeKey,
-    syncDepth: syncDepth,
-  );
-
+          attributeKey: attributeKey,
+          syncDepth: syncDepth,
+        );
 
   /** Gets the attribute init change object for this attribute. */
   @override

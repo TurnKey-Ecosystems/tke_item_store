@@ -2,9 +2,7 @@ import 'package:tke_item_store/project_library.dart';
 
 import 'Event.dart';
 
-class Value<ValueType>
-    with Getter<ValueType>, Setter<ValueType>
-    implements G<ValueType>, S<ValueType> {
+class Value<ValueType> with Getter<ValueType>, Setter<ValueType> {
   ValueType Function() _getValue = (() => null as ValueType);
   ValueType getValue() {
     return _getValue();
@@ -29,20 +27,8 @@ class Value<ValueType>
   }
 }
 
-class V<ValueType> extends Value<ValueType> {
-  V(ValueType initialValue) : super.ofNewVariable(initialValue);
-  V.f({
-    required ValueType Function() get,
-    required void Function(ValueType newValue) set,
-    List<Event?>? onAfterChangeTriggers,
-  }) : super.fromFunctions(
-          get: get,
-          set: set,
-          onAfterChangeTriggers: onAfterChangeTriggers,
-        );
-}
-
 abstract class Getter<ValueType> {
+  late final String getterID = GetterStore.registerWithGetterStore(this);
   final Event _onAfterChange = Event();
   Event get onAfterChange {
     return _onAfterChange;
@@ -63,9 +49,20 @@ abstract class Getter<ValueType> {
           get: get,
           set: ((_) => null),
           onAfterChangeTriggers: onAfterChangeTriggers);
+
+  @override
+  String toString() {
+    return GetterStore.getterToString(this);
+  }
+
+  bool operator ==(dynamic other) =>
+      other is Getter<ValueType> && this.value == other.value;
+  @override
+  int get hashCode => getValue().hashCode;
 }
 
 class ConstGetter<ValueType> implements Getter<ValueType> {
+  final String getterID = "notInStore";
   final Event _onAfterChange = const Event.unchanging();
   Event get onAfterChange {
     return _onAfterChange;
@@ -82,17 +79,16 @@ class ConstGetter<ValueType> implements Getter<ValueType> {
   }
 
   const ConstGetter(this.constValue);
-}
 
-class G<ValueType> extends Getter<ValueType> {
-  ValueType getValue() => null as ValueType;
-  factory G(ValueType initialValue) => Value.ofNewVariable(initialValue);
-  factory G.f(ValueType Function() get,
-          {List<Event?>? onAfterChangeTriggers}) =>
-      Value.fromFunctions(
-          get: get,
-          set: ((_) => null),
-          onAfterChangeTriggers: onAfterChangeTriggers);
+  @override
+  String toString() {
+    return constValue.toString();
+  }
+
+  bool operator ==(dynamic other) =>
+      other is Getter<ValueType> && this.value == other.value;
+  @override
+  int get hashCode => getValue().hashCode;
 }
 
 abstract class Setter<ValueType> {
@@ -107,31 +103,36 @@ abstract class Setter<ValueType> {
   }
 
   static Setter<ValueType> ofNewVariable<ValueType>(ValueType initialValue) =>
-      S.v(initialValue);
+      Value.ofNewVariable(initialValue);
   static Setter<ValueType> fromFunction<ValueType>(
           void Function(ValueType newValue) set) =>
-      S(set);
-}
-
-class S<ValueType> extends Setter<ValueType> {
-  factory S.v(ValueType initialValue) => Value.ofNewVariable(initialValue);
-  factory S(void Function(ValueType newValue) set) =>
       Value.fromFunctions(set: set, get: (() => null as ValueType));
 }
 
 class _VariableWrapper<VariableType> {
-  Event onAfterChange = Event();
+  final Event onAfterChange;
   VariableType _variable;
   VariableType getValue() {
     return _variable;
   }
 
   void setValue(VariableType newValue) {
-    _variable = newValue;
-    onAfterChange.trigger();
+    if (_variable is Item) {
+      newValue as Item;
+      if ((_variable as Item).itemID.value != newValue.itemID.value) {
+        (_variable as Item).setReference(newValue.itemID.value);
+      }
+    } else {
+      if (_variable != newValue) {
+        _variable = newValue;
+        onAfterChange.trigger();
+      }
+    }
   }
 
-  _VariableWrapper(this._variable);
+  _VariableWrapper(this._variable)
+      : this.onAfterChange =
+            (_variable is Item) ? _variable.itemID.onAfterChange : Event();
 }
 
 extension VariableToGetterOrValue<ValueType> on ValueType {
@@ -226,6 +227,75 @@ extension BasicDoubleArithmetic on Getter<double> {
         other.onAfterChange,
       ],
     );
+  }
+
+  Getter<bool> operator <(Getter<double> other) {
+    return Computed(
+      () {
+        return this.value < other.value;
+      },
+      recomputeTriggers: [
+        this.onAfterChange,
+        other.onAfterChange,
+      ],
+    );
+  }
+
+  Getter<bool> operator <=(Getter<double> other) {
+    return Computed(
+      () {
+        return this.value <= other.value;
+      },
+      recomputeTriggers: [
+        this.onAfterChange,
+        other.onAfterChange,
+      ],
+    );
+  }
+
+  Getter<bool> operator >=(Getter<double> other) {
+    return Computed(
+      () {
+        return this.value >= other.value;
+      },
+      recomputeTriggers: [
+        this.onAfterChange,
+        other.onAfterChange,
+      ],
+    );
+  }
+
+  Getter<bool> operator >(Getter<double> other) {
+    return Computed(
+      () {
+        return this.value > other.value;
+      },
+      recomputeTriggers: [
+        this.onAfterChange,
+        other.onAfterChange,
+      ],
+    );
+  }
+}
+
+abstract class GetterStore {
+  static int _nextGetterID = 0;
+  static String registerWithGetterStore<GetterType>(Getter<GetterType> getter) {
+    String newGetterID = _nextGetterID.toString();
+    _gettersByID[newGetterID] = getter;
+    _nextGetterID++;
+    return newGetterID;
+  }
+
+  static Map<String, Getter<dynamic>> _gettersByID = Map();
+
+  static const String INLINE_GETTER_TAG = '<getter getterID="';
+  static String getterToString<GetterType>(Getter<GetterType> getter) {
+    return INLINE_GETTER_TAG + getter.getterID + '"/>';
+  }
+
+  static Getter<GetterType> getGetterFromID<GetterType>(String getterID) {
+    return _gettersByID[getterID]! as Getter<GetterType>;
   }
 }
 

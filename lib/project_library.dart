@@ -27,6 +27,11 @@ part './DataStructures/Attributes/AttributeProperty.dart';
 part './DataStructures/Attributes/AttributeStringSet.dart';
 part './DataStructures/Change.dart';
 part './DataStructures/Item.dart';
+part './DataStructures/ObservableList.dart';
+part './DataStructures/ObservableSet.dart';
 part './DataStructures/SyncDepth.dart';
+part './Utilities/BooleanGetterOperations.dart';
 part './Utilities/Computed.dart';
+part './Utilities/IfElse.dart';
+part './Utilities/Math.dart';
 // tke-cli-end-tag: "parts"
