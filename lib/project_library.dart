@@ -15,6 +15,8 @@ import 'OtherLibraries/Event.dart';
 export 'OtherLibraries/Event.dart';
 import 'OtherLibraries/Value.dart';
 export 'OtherLibraries/Value.dart';
+import 'OtherLibraries/ValueOperators.dart';
+export 'OtherLibraries/ValueOperators.dart';
 
 // Managed by tke-cli DO NOT TOUCH
 // tke-cli-begin-tag: "parts"
