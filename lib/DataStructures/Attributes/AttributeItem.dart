@@ -1,7 +1,11 @@
 part of tke_item_store;
 
 // Provides a control pannel for an instance of an item attribute
-class AttributeItem<ItemClassType extends Item?> extends Attribute {
+class AttributeItem<ItemClassType extends Item?> extends Attribute
+    implements Value<ItemClassType> {
+  /// Register witht he getter store
+  late final String getterID = GetterStore.registerWithGetterStore(this);
+
   // We can't require constructors on items, so we will us this instead.
   final ItemClassType Function(String?) getItemFromItemID;
 
@@ -9,6 +13,9 @@ class AttributeItem<ItemClassType extends Item?> extends Attribute {
   ItemClassType get value {
     return getItemFromItemID(attributeInstance.value.valueAsProperty);
   }
+
+  // Expose the value of the attribute
+  ItemClassType getValue() => value;
 
   // Changes to the attribute made through this class are considered local changes
   void set value(ItemClassType newValue) {
@@ -22,6 +29,11 @@ class AttributeItem<ItemClassType extends Item?> extends Attribute {
         ),
       ],
     );
+  }
+
+  @override
+  void setValue(ItemClassType newValue) {
+    value = newValue;
   }
 
   // Allow devs to define their own default values
