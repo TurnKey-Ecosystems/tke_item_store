@@ -24,7 +24,7 @@ abstract class Attribute {
 
   // We'll expose the on-after-change event of the attribute instance.
   late final Value<String> _oldItemID;
-  late final Event onAfterChange = Event();
+  final Event onAfterChange = Event();
 
   // This is mainly used for storing the attribute key while the attribute is being initialized
   final String attributeKey;
