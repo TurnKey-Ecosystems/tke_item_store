@@ -25,7 +25,7 @@ class AttributeItem<ItemClassType extends Item?> extends Attribute
           changeApplicationDepth: syncDepth,
           itemID: _itemManager.value.itemID,
           attributeKey: attributeKey,
-          value: newValue?.itemID,
+          value: newValue?.itemID.value,
         ),
       ],
     );
