@@ -49,8 +49,8 @@ abstract class Item {
 
   /**Creates a new item */
   Item.createNew({required String itemType})
-      : this._itemID = AllItemsManager.requestNewItemID(itemType: itemType).v {
-    // Create a list to collect changes in
+      : this._itemID = _doFirstTimeSetUp(itemType: itemType) {
+    /*// Create a list to collect changes in
     List<Change> changes = [];
 
     // Create the item creation change
@@ -70,13 +70,29 @@ abstract class Item {
     }
 
     // Create the new item isntance
-    AllItemsManager.applyChangesIfRelevant(changes: changes);
+    AllItemsManager.applyChangesIfRelevant(changes: changes);*/
 
     // Wire up the onDelete event
     attatchOnDeleteToItemManager();
 
     // Wire up the attributes
     //_connectAttributesToAttributeInstances();
+  }
+
+  // This allows some setup to happen before attributes an instantiated.
+  static Value<String> _doFirstTimeSetUp({
+    required String itemType,
+  }) {
+    Value<String> itemID =
+        AllItemsManager.requestNewItemID(itemType: itemType).v;
+    AllItemsManager.applyChangesIfRelevant(changes: [
+      ChangeItemCreation(
+        changeApplicationDepth: SyncDepth.CLOUD,
+        itemType: itemType,
+        itemID: itemID.value,
+      ),
+    ]);
+    return itemID;
   }
 
   /** Creates a new item control pannel for the item with the given itemID. */
