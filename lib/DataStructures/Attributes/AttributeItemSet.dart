@@ -87,10 +87,17 @@ class AttributeItemSet<ItemClassType extends Item> extends Attribute {
     required SyncDepth syncDepth,
     required this.getItemFromItemID,
     required this.shouldDeleteContentsWhenItemIsDeleted,
+    required Getter<SingleItemManager> itemManager,
   }) : super(
           attributeKey: attributeKey,
           syncDepth: syncDepth,
-        );
+          itemManager: itemManager,
+        ) {
+    // If this is a defining relationship, then delete the contents of this Set when the item is deleted
+    if (shouldDeleteContentsWhenItemIsDeleted) {
+      _listenToOnDeleteAndDeleteContents();
+    }
+  }
 
   /** Gets the attribute init change object for this attribute. */
   @override
@@ -102,18 +109,5 @@ class AttributeItemSet<ItemClassType extends Item> extends Attribute {
       itemID: itemID,
       attributeKey: attributeKey,
     );
-  }
-
-  /** After the attributes are setup, then we want to listen for the item being deleted */
-  @override
-  void connectToAttributeInstance({
-    required Getter<SingleItemManager> itemManager,
-  }) {
-    super.connectToAttributeInstance(itemManager: itemManager);
-
-    // If this is a defining relationship, then delete the contents of this Set when the item is deleted
-    if (shouldDeleteContentsWhenItemIsDeleted) {
-      _listenToOnDeleteAndDeleteContents();
-    }
   }
 }

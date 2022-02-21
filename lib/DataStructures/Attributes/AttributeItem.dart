@@ -50,9 +50,11 @@ class AttributeItem<ItemClassType extends Item?> extends Attribute
     required SyncDepth syncDepth,
     required this.getDefaultItemOnCreateNew,
     required this.getItemFromItemID,
+    required Getter<SingleItemManager> itemManager,
   }) : super(
           attributeKey: attributeKey,
           syncDepth: syncDepth,
+          itemManager: itemManager,
         );
 
   /** Gets the attribute init change object for this attribute. */

@@ -2,7 +2,7 @@ part of tke_item_store;
 
 // Models an attribute instance
 abstract class Attribute {
-  late final Getter<SingleItemManager> _itemManager;
+  final Getter<SingleItemManager> _itemManager;
 
   // The attribute instance that this Attribute models
   late final Getter<InstanceOfAttribute> attributeInstance = Computed(
@@ -36,15 +36,8 @@ abstract class Attribute {
   Attribute({
     required this.attributeKey,
     required this.syncDepth,
-  });
-
-  /** This should only be called by Item */
-  void connectToAttributeInstance({
     required Getter<SingleItemManager> itemManager,
-  }) {
-    // Setup the item manager
-    this._itemManager = itemManager;
-
+  }) : _itemManager = itemManager {
     // Respond to changes in the item managers
     attributeInstance.value.onAfterChange.addListener(onAfterChange.trigger);
     _oldItemID = ''.v;

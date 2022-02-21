@@ -9,9 +9,10 @@ abstract class Item {
   static const String _CONTAINED_IN_DELIMITER = ".";
 
   /// These are the attribute item sets that contain this item
-  final AttributeStringSet _containedIn = AttributeStringSet(
+  late final AttributeStringSet _containedIn = AttributeStringSet(
     attributeKey: "tfc_containedIn",
     syncDepth: SyncDepth.CLOUD,
+    itemManager: _itemManager,
   );
 
   // The instnace of this item
@@ -23,7 +24,7 @@ abstract class Item {
   );
 
   // Expose the itemID for getting
-  late final Value<String> _itemID;
+  final Value<String> _itemID;
   late final Getter<String> itemID = _itemID;
 
   /// Only use this if you know what you are doing.
@@ -47,12 +48,12 @@ abstract class Item {
   }
 
   /**Creates a new item */
-  Item.createNew() {
+  Item.createNew({required String itemType})
+      : this._itemID = AllItemsManager.requestNewItemID(itemType: itemType).v {
     // Create a list to collect changes in
     List<Change> changes = [];
 
     // Create the item creation change
-    this._itemID = AllItemsManager.requestNewItemID(itemType: itemType).v;
     changes.add(
       ChangeItemCreation(
         changeApplicationDepth: SyncDepth.CLOUD,
@@ -75,13 +76,13 @@ abstract class Item {
     attatchOnDeleteToItemManager();
 
     // Wire up the attributes
-    _connectAttributesToAttributeInstances();
+    //_connectAttributesToAttributeInstances();
   }
 
   /** Creates a new item control pannel for the item with the given itemID. */
   Item.fromItemID(this._itemID) {
     attatchOnDeleteToItemManager();
-    _connectAttributesToAttributeInstances();
+    //_connectAttributesToAttributeInstances();
   }
 
   void attatchOnDeleteToItemManager() {
@@ -102,13 +103,13 @@ abstract class Item {
   }
 
   /** Sets up all the attributes in this item */
-  void _connectAttributesToAttributeInstances() {
+  /*void _connectAttributesToAttributeInstances() {
     for (Attribute attribute in _getAllAttributes()) {
       attribute.connectToAttributeInstance(
         itemManager: _itemManager,
       );
     }
-  }
+  }*/
 
   /** Permanently delete this item */
   void delete() {

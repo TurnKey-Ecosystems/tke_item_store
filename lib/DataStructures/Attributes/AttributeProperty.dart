@@ -51,10 +51,12 @@ abstract class _AttributeProperty<PropertyType> extends Attribute
     required String attributeKey,
     required SyncDepth syncDepth,
     required this.valueOnCreateNew,
+    required Getter<SingleItemManager> itemManager,
   })  : _value = valueOnCreateNew,
         super(
           attributeKey: attributeKey,
           syncDepth: syncDepth,
+          itemManager: itemManager,
         );
 
   /** Gets the attribute init change object for this attribute. */
@@ -82,10 +84,13 @@ class AttributeBool extends _AttributeProperty<bool> {
     required String attributeKey,
     required SyncDepth syncDepth,
     required bool valueOnCreateNew,
+    required Getter<SingleItemManager> itemManager,
   }) : super(
-            attributeKey: attributeKey,
-            syncDepth: syncDepth,
-            valueOnCreateNew: valueOnCreateNew);
+          attributeKey: attributeKey,
+          syncDepth: syncDepth,
+          valueOnCreateNew: valueOnCreateNew,
+          itemManager: itemManager,
+        );
 }
 
 // Provides a control pannel for an instance of an int attribute
@@ -94,10 +99,13 @@ class AttributeInt extends _AttributeProperty<int> {
     required String attributeKey,
     required SyncDepth syncDepth,
     required int valueOnCreateNew,
+    required Getter<SingleItemManager> itemManager,
   }) : super(
-            attributeKey: attributeKey,
-            syncDepth: syncDepth,
-            valueOnCreateNew: valueOnCreateNew);
+          attributeKey: attributeKey,
+          syncDepth: syncDepth,
+          valueOnCreateNew: valueOnCreateNew,
+          itemManager: itemManager,
+        );
 }
 
 // Provides a control pannel for an instance of a double attribute
@@ -106,10 +114,13 @@ class AttributeDouble extends _AttributeProperty<double> {
     required String attributeKey,
     required SyncDepth syncDepth,
     required double valueOnCreateNew,
+    required Getter<SingleItemManager> itemManager,
   }) : super(
-            attributeKey: attributeKey,
-            syncDepth: syncDepth,
-            valueOnCreateNew: valueOnCreateNew);
+          attributeKey: attributeKey,
+          syncDepth: syncDepth,
+          valueOnCreateNew: valueOnCreateNew,
+          itemManager: itemManager,
+        );
 }
 
 // Provides a control pannel for an instance of a String attribute
@@ -118,10 +129,13 @@ class AttributeString extends _AttributeProperty<String> {
     required String attributeKey,
     required SyncDepth syncDepth,
     required String valueOnCreateNew,
+    required Getter<SingleItemManager> itemManager,
   }) : super(
-            attributeKey: attributeKey,
-            syncDepth: syncDepth,
-            valueOnCreateNew: valueOnCreateNew);
+          attributeKey: attributeKey,
+          syncDepth: syncDepth,
+          valueOnCreateNew: valueOnCreateNew,
+          itemManager: itemManager,
+        );
 }
 
 // Provides a control pannel for an instance of a session exlusive object attribute
@@ -130,8 +144,11 @@ class AttributeSessionObject<ObjectType>
   AttributeSessionObject({
     required String attributeKey,
     required ObjectType valueOnCreateNew,
+    required Getter<SingleItemManager> itemManager,
   }) : super(
-            attributeKey: attributeKey,
-            syncDepth: SyncDepth.SESSION,
-            valueOnCreateNew: valueOnCreateNew);
+          attributeKey: attributeKey,
+          syncDepth: SyncDepth.SESSION,
+          valueOnCreateNew: valueOnCreateNew,
+          itemManager: itemManager,
+        );
 }
