@@ -11,7 +11,14 @@ abstract class _AttributeProperty<PropertyType> extends Attribute
 
   // Expose the value of the attribute
   PropertyType get value {
-    return attributeInstance.value.valueAsProperty;
+    var instanceValue = attributeInstance.value.valueAsProperty;
+    if (PropertyType == int && !(instanceValue is int)) {
+      return (instanceValue as double).toInt() as PropertyType;
+    } else if (PropertyType == double && !(instanceValue is double)) {
+      return (instanceValue as int).toDouble() as PropertyType;
+    } else {
+      return instanceValue;
+    }
   }
 
   PropertyType getValue() {

@@ -157,8 +157,8 @@ extension FuncToSetter<ValueType> on void Function(ValueType) {
   }
 }
 
-typedef Num = Value<double>;
-typedef Bool = Value<bool>;
+//typedef Num = Value<double>;
+//typedef Bool = Value<bool>;
 //typedef Text = Value<string>;
 
 /*abstract class ReadOnly<GetterType extends Getter<ValueType>, ValueType> implements Getter<ValueType> {
