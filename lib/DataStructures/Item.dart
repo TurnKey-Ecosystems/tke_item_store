@@ -12,11 +12,11 @@ abstract class Item {
   late final AttributeStringSet _containedIn = AttributeStringSet(
     attributeKey: "tfc_containedIn",
     syncDepth: SyncDepth.CLOUD,
-    itemManager: _itemManager,
+    itemManager: itemManager,
   );
 
   // The instnace of this item
-  late final Getter<SingleItemManager> _itemManager = Computed(
+  late final Getter<SingleItemManager> itemManager = Computed(
     () => AllItemsManager.getItemInstance(itemID.value)!,
     recomputeTriggers: [
       itemID.onAfterChange,
@@ -89,7 +89,7 @@ abstract class Item {
     // Respond to changes in the
     this._oldItemID = ''.v;
     this._oldItemID.value = itemID.value;
-    _itemManager.value.onDelete.addListener(onDelete.trigger);
+    itemManager.value.onDelete.addListener(onDelete.trigger);
     this.itemID.onAfterChange.addListener(() {
       // Stop listening to the old item instance
       AllItemsManager.getItemInstance(_oldItemID.value)
@@ -98,7 +98,7 @@ abstract class Item {
       _oldItemID.value = itemID.value;
 
       // Start listening to changes in the new item instance
-      _itemManager.value.onDelete.addListener(onDelete.trigger);
+      itemManager.value.onDelete.addListener(onDelete.trigger);
     });
   }
 
