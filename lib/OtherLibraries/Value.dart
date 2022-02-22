@@ -157,8 +157,8 @@ extension FuncToSetter<ValueType> on void Function(ValueType) {
   }
 }
 
-extension GetterNullOperators<T> on Getter<T?> {
-  Getter<T?> q(T? doSomething(T? value)) {
+extension GetterNullOperators<ValueType> on Getter<ValueType?> {
+  Getter<ReturnType?> q<ReturnType>(ReturnType? doSomething(ValueType? value)) {
     return Computed(
       () => doSomething(this.value) ?? null,
       recomputeTriggers: [
