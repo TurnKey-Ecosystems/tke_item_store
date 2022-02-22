@@ -1,11 +1,13 @@
 part of tke_item_store;
 
 /// Computes a value, and triggers an onAfterChange event whenever any of the dependencies change.
-class Math<ValueType> {
-  static Getter<double> max(Getter<double> numA, Getter<double> numB) {
+class Math {
+  static Getter<d> max<d extends num?>(Getter<d> numA, Getter<d> numB) {
     return Computed(
       () {
-        if (numA.value > numB.value) {
+        if (numA.value == null || numB.value == null) {
+          return null as d;
+        } else if (numA.value! > numB.value!) {
           return numA.value;
         } else {
           return numB.value;
@@ -18,10 +20,12 @@ class Math<ValueType> {
     );
   }
 
-  static Getter<double> min(Getter<double> numA, Getter<double> numB) {
+  static Getter<d> min<d extends num?>(Getter<d> numA, Getter<d> numB) {
     return Computed(
       () {
-        if (numA.value < numB.value) {
+        if (numA.value == null || numB.value == null) {
+          return null as d;
+        } else if (numA.value! < numB.value!) {
           return numA.value;
         } else {
           return numB.value;

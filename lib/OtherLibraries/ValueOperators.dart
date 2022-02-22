@@ -1,12 +1,152 @@
 import 'package:tke_item_store/project_library.dart';
 
-/// This defines all the arithmetic operators for Getter<num>'s.
-extension GetterArtithmeticOperators on Getter<num> {
-  Getter<double> operator +(Getter<num> other) {
+extension GetterIntConversion<T extends num> on Getter<T> {
+  Getter<int> toInt() => Computed(
+        () => this.value.toInt(),
+        recomputeTriggers: [
+          this.onAfterChange,
+        ],
+      );
+
+  Getter<double> toDouble() => Computed(
+        () => this.value.toDouble(),
+        recomputeTriggers: [
+          this.onAfterChange,
+        ],
+      );
+
+  Getter<T?> asNullable() => Computed(
+        () => this.value,
+        recomputeTriggers: [
+          this.onAfterChange,
+        ],
+      );
+
+  Getter<T> asNonNullable() => Computed(
+        () => this.value,
+        recomputeTriggers: [
+          this.onAfterChange,
+        ],
+      );
+}
+
+extension GetterIntNullableConversion<T extends num> on Getter<T?> {
+  Getter<int?> toInt() => Computed(
+        () => this.value?.toInt(),
+        recomputeTriggers: [
+          this.onAfterChange,
+        ],
+      );
+
+  Getter<double?> toDouble() => Computed(
+        () => this.value?.toDouble(),
+        recomputeTriggers: [
+          this.onAfterChange,
+        ],
+      );
+
+  Getter<T?> asNullable() => Computed(
+        () => this.value,
+        recomputeTriggers: [
+          this.onAfterChange,
+        ],
+      );
+
+  Getter<T> asNonNullable() => Computed(
+        () => this.value!,
+        recomputeTriggers: [
+          this.onAfterChange,
+        ],
+      );
+}
+
+/// This defines all the arithmetic operators for Getter<double>'s and Getter<double?>'s.
+extension GetterDoubleNullableOperators on Getter<num?> {
+  Getter<double?> operator +(Getter<num?> other) {
     return Computed(
       () {
-        return (this.value as double) + other.value;
+        if (this.value == null || other.value == null) {
+          return null;
+        } else {
+          return this.value!.toDouble() + other.value!.toDouble();
+        }
       },
+      recomputeTriggers: [
+        this.onAfterChange,
+        other.onAfterChange,
+      ],
+    );
+  }
+
+  Getter<double?> operator -(Getter<num?> other) {
+    return Computed(
+      () {
+        if (this.value == null || other.value == null) {
+          return null;
+        } else {
+          return this.value!.toDouble() - other.value!.toDouble();
+        }
+      },
+      recomputeTriggers: [
+        this.onAfterChange,
+        other.onAfterChange,
+      ],
+    );
+  }
+
+  Getter<double?> operator *(Getter<num?> other) {
+    return Computed(
+      () {
+        if (this.value == null || other.value == null) {
+          return null;
+        } else {
+          return this.value!.toDouble() * other.value!.toDouble();
+        }
+      },
+      recomputeTriggers: [
+        this.onAfterChange,
+        other.onAfterChange,
+      ],
+    );
+  }
+
+  Getter<double?> operator /(Getter<num?> other) {
+    return Computed(
+      () {
+        if (this.value == null || other.value == null) {
+          return null;
+        } else {
+          return this.value!.toDouble() / other.value!.toDouble();
+        }
+      },
+      recomputeTriggers: [
+        this.onAfterChange,
+        other.onAfterChange,
+      ],
+    );
+  }
+
+  Getter<double?> operator %(Getter<num?> other) {
+    return Computed(
+      () {
+        if (this.value == null || other.value == null) {
+          return null;
+        } else {
+          return this.value!.toDouble() % other.value!.toDouble();
+        }
+      },
+      recomputeTriggers: [
+        this.onAfterChange,
+        other.onAfterChange,
+      ],
+    );
+  }
+}
+
+extension GetterDoubleNonNullableOperators on Getter<num> {
+  Getter<double> operator +(Getter<num> other) {
+    return Computed(
+      () => this.value.toDouble() + other.value.toDouble(),
       recomputeTriggers: [
         this.onAfterChange,
         other.onAfterChange,
@@ -16,9 +156,7 @@ extension GetterArtithmeticOperators on Getter<num> {
 
   Getter<double> operator -(Getter<num> other) {
     return Computed(
-      () {
-        return (this.value as double) - other.value;
-      },
+      () => this.value.toDouble() - other.value.toDouble(),
       recomputeTriggers: [
         this.onAfterChange,
         other.onAfterChange,
@@ -28,9 +166,7 @@ extension GetterArtithmeticOperators on Getter<num> {
 
   Getter<double> operator *(Getter<num> other) {
     return Computed(
-      () {
-        return (this.value as double) * other.value;
-      },
+      () => this.value.toDouble() * other.value.toDouble(),
       recomputeTriggers: [
         this.onAfterChange,
         other.onAfterChange,
@@ -40,9 +176,7 @@ extension GetterArtithmeticOperators on Getter<num> {
 
   Getter<double> operator /(Getter<num> other) {
     return Computed(
-      () {
-        return (this.value as double) / other.value;
-      },
+      () => this.value.toDouble() / other.value.toDouble(),
       recomputeTriggers: [
         this.onAfterChange,
         other.onAfterChange,
@@ -52,9 +186,7 @@ extension GetterArtithmeticOperators on Getter<num> {
 
   Getter<double> operator %(Getter<num> other) {
     return Computed(
-      () {
-        return (this.value as double) % other.value;
-      },
+      () => this.value.toDouble() % other.value.toDouble(),
       recomputeTriggers: [
         this.onAfterChange,
         other.onAfterChange,
@@ -258,7 +390,13 @@ extension GetterBooleanOperators on Getter<bool> {
 
 Getter<int> a = 2.g;
 Getter<int> b = 3.g;
-Getter<int> c = (a + b) as Getter<int>;
+Getter<int> c = (a + b).toInt();
 Getter<double> d = 2.0.g;
 Getter<double> e = 3.0.g;
 Getter<double> f = d + e;
+Getter<double?> g = null.g;
+Getter<double?> h = null.g;
+Getter<double?> i = g + null.g;
+Getter<double?> j = d.asNullable() + g;
+Getter<double?> k = d + e;
+Getter<double> l = d + a;
