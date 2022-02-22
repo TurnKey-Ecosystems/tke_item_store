@@ -157,6 +157,17 @@ extension FuncToSetter<ValueType> on void Function(ValueType) {
   }
 }
 
+extension GetterNullOperators<T> on Getter<T?> {
+  Getter<T?> q(T? doSomething(T? value)) {
+    return Computed(
+      () => doSomething(this.value) ?? null,
+      recomputeTriggers: [
+        this.onAfterChange,
+      ],
+    );
+  }
+}
+
 //typedef Num = Value<double>;
 //typedef Bool = Value<bool>;
 //typedef Text = Value<string>;
@@ -188,7 +199,6 @@ abstract class GetterStore {
     return _gettersByID[getterID]! as Getter<GetterType>;
   }
 }
-
 
 // Patterns:
 // - Big classes with a lot of allowed configuration.
