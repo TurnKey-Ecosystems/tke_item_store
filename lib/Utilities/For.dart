@@ -10,7 +10,8 @@ class For<InputValueType, ReturnValueType>
   final Getter<ObservableList<InputValueType>> list;
 
   /// The result if the condition is true
-  final Getter<ReturnValueType>? Function(Getter<InputValueType> element) each;
+  final Getter<ReturnValueType>? Function(Getter<InputValueType> element,
+      Getter<ObservableList<ReturnValueType>> outputList) each;
 
   /// Triggered any time there is a new value
   final Event onAfterChange = Event();
@@ -19,7 +20,7 @@ class For<InputValueType, ReturnValueType>
   ObservableList<ReturnValueType> getValue() {
     ObservableList<ReturnValueType> returnList = ObservableList();
     for (Getter<InputValueType> inputElement in list.value) {
-      Getter<ReturnValueType>? returnElement = each(inputElement);
+      Getter<ReturnValueType>? returnElement = each(inputElement, returnList.g);
       if (returnElement != null) {
         returnList.add(returnElement);
       }
