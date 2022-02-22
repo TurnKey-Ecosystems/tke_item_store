@@ -160,11 +160,8 @@ extension FuncToSetter<ValueType> on void Function(ValueType) {
 extension GetterNullOperators<ValueType> on Getter<ValueType?> {
   Getter<ReturnType?> q<ReturnType>(
       Getter<ReturnType>? doSomething(ValueType? value)) {
-    return IfElse(
-      areEqual(this, null.g),
-      ifTrue: null.g,
-      ifFalse: doSomething(this.value)!,
-    );
+    return (doSomething(this.value) ?? null.g)
+      ..onAfterChange.subscribeTo(this.onAfterChange);
   }
 }
 
