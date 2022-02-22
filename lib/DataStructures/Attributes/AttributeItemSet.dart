@@ -1,16 +1,23 @@
 part of tke_item_store;
 
 // Provides a control pannel for an instance of an item attribute
-class AttributeItemSet<ItemClassType extends Item> extends Attribute {
+class AttributeItemSet<ItemClassType extends Item> extends Attribute
+    implements Getter<ObservableSet<ItemClassType>> {
+  /// Register witht he getter store
+  late final String getterID = GetterStore.registerWithGetterStore(this);
+
   // We can't require constructors on items, so we will us this instead.
   final ItemClassType Function(String) getItemFromItemID;
 
+  @override
+  ObservableSet<ItemClassType> getValue() => value;
+
   // Allow devs to access the items in this set
-  Set<ItemClassType> get allItems {
-    Set<ItemClassType> allItems = {};
+  ObservableSet<ItemClassType> get value {
+    ObservableSet<ItemClassType> allItems = ObservableSet();
     for (String itemID in attributeInstance.value.getAllValuesAsSet<String>()) {
       allItems.add(
-        getItemFromItemID(itemID),
+        getItemFromItemID(itemID).g,
       );
     }
     return allItems;
@@ -68,8 +75,8 @@ class AttributeItemSet<ItemClassType extends Item> extends Attribute {
     if (!onDeleteItemEntry.containsKey(attributeKey)) {
       onDeleteItemEntry[attributeKey] = () {
         // Delete all of this sets contents
-        for (ItemClassType item in allItems) {
-          item.delete();
+        for (Getter<ItemClassType> item in value) {
+          item.value.delete();
         }
 
         // The item will be deleted, so their is no sense is listening any more
