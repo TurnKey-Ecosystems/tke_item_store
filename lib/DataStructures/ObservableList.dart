@@ -17,7 +17,8 @@ extension ToObservableList<ElementType> on List<Getter<ElementType>> {
   }
 }
 
-extension Temp<ElementType> on Getter<ObservableList<ElementType>> {
+extension ObservableListOperations<ElementType>
+    on Getter<ObservableList<ElementType>> {
   Getter<ObservableList<ElementType>> operator +(
       Getter<ObservableList<ElementType>> other) {
     return Computed(
@@ -39,6 +40,16 @@ extension Temp<ElementType> on Getter<ObservableList<ElementType>> {
       ],
     );
   }
+
+  Getter<ObservableSet<ElementType>> toSet() => Computed(
+        () => ObservableSet(source: this.value.toSet()),
+        recomputeTriggers: [
+          this.onAfterChange,
+          this.value.onElementAddedOrRemoved,
+        ],
+      );
+
+  Getter<ObservableList<ElementType>> toList() => this;
 }
 
 /// Defines an observable version of a list

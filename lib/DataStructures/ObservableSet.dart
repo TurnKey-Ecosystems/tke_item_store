@@ -17,6 +17,41 @@ extension ToObservableSet<ElementType> on Set<Getter<ElementType>> {
   }
 }
 
+extension ObservableSetOperations<ElementType>
+    on Getter<ObservableSet<ElementType>> {
+  Getter<ObservableSet<ElementType>> operator +(
+      Getter<ObservableSet<ElementType>> other) {
+    return Computed(
+      () {
+        ObservableSet<ElementType> newList = ObservableSet();
+        for (Getter<ElementType> element in this.value) {
+          newList.add(element);
+        }
+        for (Getter<ElementType> element in other.value) {
+          newList.add(element);
+        }
+        return newList;
+      },
+      recomputeTriggers: [
+        this.onAfterChange,
+        this.value.onElementAddedOrRemoved,
+        other.onAfterChange,
+        other.value.onElementAddedOrRemoved,
+      ],
+    );
+  }
+
+  Getter<ObservableList<ElementType>> toList() => Computed(
+        () => ObservableList(source: this.value.toList()),
+        recomputeTriggers: [
+          this.onAfterChange,
+          this.value.onElementAddedOrRemoved,
+        ],
+      );
+
+  Getter<ObservableSet<ElementType>> toSet() => this;
+}
+
 /// Defines an observable version of a set
 class ObservableSet<ElementType> implements Iterable<Getter<ElementType>> {
   /// This is the set that is being wrapped
