@@ -17,6 +17,30 @@ extension ToObservableList<ElementType> on List<Getter<ElementType>> {
   }
 }
 
+extension Temp<ElementType> on Getter<ObservableList<ElementType>> {
+  Getter<ObservableList<ElementType>> operator +(
+      Getter<ObservableList<ElementType>> other) {
+    return Computed(
+      () {
+        ObservableList<ElementType> newList = ObservableList();
+        for (Getter<ElementType> element in this.value) {
+          newList.add(element);
+        }
+        for (Getter<ElementType> element in other.value) {
+          newList.add(element);
+        }
+        return newList;
+      },
+      recomputeTriggers: [
+        this.onAfterChange,
+        this.value.onElementAddedOrRemoved,
+        other.onAfterChange,
+        other.value.onElementAddedOrRemoved,
+      ],
+    );
+  }
+}
+
 /// Defines an observable version of a list
 class ObservableList<ElementType> implements Iterable<Getter<ElementType>> {
   /// This is the list that is being wrapped

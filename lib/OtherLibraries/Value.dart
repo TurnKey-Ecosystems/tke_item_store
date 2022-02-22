@@ -163,6 +163,11 @@ extension GetterNullOperators<ValueType> on Getter<ValueType?> {
     return (doSomething(this.value) ?? null.g)
       ..onAfterChange.subscribeTo(this.onAfterChange);
   }
+
+  /*Getter<ReturnType> e<ReturnType>(
+      Getter<ReturnType> doSomething(ValueType value)) {
+    return doSomething(this.value!);
+  }*/
 }
 
 //typedef Num = Value<double>;
