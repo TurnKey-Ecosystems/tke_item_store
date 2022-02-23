@@ -30,8 +30,6 @@ extension ObservableListOperations<ElementType>
         for (Getter<ElementType> element in other.value) {
           newList.add(element);
         }
-        print('newList: ${newList}');
-        print('newList.length: ${newList.length}');
         return newList;
       },
       recomputeTriggers: [
