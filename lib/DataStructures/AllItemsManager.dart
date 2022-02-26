@@ -17,7 +17,8 @@ abstract class AllItemsManager {
   // Gets the itemIDs belonging to the given itemType
   static Getter<ObservableList<ItemClassType>>
       getItemsForItemType<ItemClassType extends Item>(
-          String itemType, ItemClassType itemFromItemID(Value<String> itemID)) {
+          {required String itemType,
+          required ItemClassType itemFromItemID(Value<String> itemID)}) {
     return Computed(
       () {
         ObservableList<ItemClassType> items = ObservableList();
