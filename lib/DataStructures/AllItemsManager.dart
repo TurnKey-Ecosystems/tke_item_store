@@ -22,12 +22,9 @@ abstract class AllItemsManager {
     return Computed(
       () {
         ObservableList<ItemClassType> items = ObservableList();
-        if (_itemIDsForEachItemType[itemType] != null) {
-          Set<String> allItemIDs = Set.from(_itemIDsForEachItemType[itemType]!);
-          for (String itemID in allItemIDs) {
-            items.add(itemFromItemID(itemID.v).g);
-          }
-        }
+        _itemIDsForEachItemType[itemType]?.forEach((String itemID) {
+          items.add(itemFromItemID(itemID.v).g);
+        });
         return items;
       },
       recomputeTriggers: [

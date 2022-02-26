@@ -1,18 +1,17 @@
 part of tke_item_store;
 
 /// Returns one of two different values absed on a condition
-class For<InputValueType, ReturnValueType>
+class ForEach<InputValueType, ReturnValueType>
     implements Getter<ObservableList<ReturnValueType>> {
   /// Register witht he getter store
   late final String getterID = GetterStore.registerWithGetterStore(this);
 
   /// The condition that will change the result
-  final Getter<int> count;
+  final Getter<ObservableList<InputValueType>> list;
 
   /// The result if the condition is true
-  final Getter<ReturnValueType>? Function(
-          Getter<int> index, Getter<ObservableList<ReturnValueType>> outputList)
-      each;
+  final Getter<ReturnValueType>? Function(Getter<InputValueType> element,
+      Getter<ObservableList<ReturnValueType>> outputList) each;
 
   /// Triggered any time there is a new value
   final Event onAfterChange = Event();
@@ -20,8 +19,8 @@ class For<InputValueType, ReturnValueType>
   /// Compute the value
   ObservableList<ReturnValueType> getValue() {
     ObservableList<ReturnValueType> returnList = ObservableList();
-    for (int i = 0; i < count.value; i++) {
-      Getter<ReturnValueType>? returnElement = each(i.g, returnList.g);
+    for (Getter<InputValueType> inputElement in list.value) {
+      Getter<ReturnValueType>? returnElement = each(inputElement, returnList.g);
       if (returnElement != null) {
         returnList.add(returnElement);
       }
@@ -33,11 +32,11 @@ class For<InputValueType, ReturnValueType>
   ObservableList<ReturnValueType> get value => getValue();
 
   /// Created a new For computer
-  For({
-    required this.count,
+  ForEach({
+    required this.list,
     required this.each,
   }) {
-    this.onAfterChange.subscribeTo(count.onAfterChange);
+    this.onAfterChange.subscribeTo(list.onAfterChange);
   }
 
   @override
