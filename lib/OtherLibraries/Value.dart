@@ -164,10 +164,40 @@ extension GetterNullOperators<ValueType> on Getter<ValueType?> {
       ..onAfterChange.subscribeTo(this.onAfterChange);
   }
 
+  Getter<ValueType?> asNullable() => Computed(
+        () => this.value,
+        recomputeTriggers: [
+          this.onAfterChange,
+        ],
+      );
+
+  Getter<ValueType> asNonNullable() => Computed(
+        () => this.value!,
+        recomputeTriggers: [
+          this.onAfterChange,
+        ],
+      );
+
   /*Getter<ReturnType> e<ReturnType>(
       Getter<ReturnType> doSomething(ValueType value)) {
     return doSomething(this.value!);
   }*/
+}
+
+extension GetterNonNullOperators<ValueType> on Getter<ValueType> {
+  Getter<ValueType?> asNullable() => Computed(
+        () => this.value,
+        recomputeTriggers: [
+          this.onAfterChange,
+        ],
+      );
+
+  Getter<ValueType> asNonNullable() => Computed(
+        () => this.value,
+        recomputeTriggers: [
+          this.onAfterChange,
+        ],
+      );
 }
 
 //typedef Num = Value<double>;

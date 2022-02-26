@@ -14,20 +14,6 @@ extension GetterIntConversion<T extends num> on Getter<T> {
           this.onAfterChange,
         ],
       );
-
-  Getter<T?> asNullable() => Computed(
-        () => this.value,
-        recomputeTriggers: [
-          this.onAfterChange,
-        ],
-      );
-
-  Getter<T> asNonNullable() => Computed(
-        () => this.value,
-        recomputeTriggers: [
-          this.onAfterChange,
-        ],
-      );
 }
 
 extension GetterIntNullableConversion<T extends num> on Getter<T?> {
@@ -40,20 +26,6 @@ extension GetterIntNullableConversion<T extends num> on Getter<T?> {
 
   Getter<double?> toDouble() => Computed(
         () => this.value?.toDouble(),
-        recomputeTriggers: [
-          this.onAfterChange,
-        ],
-      );
-
-  Getter<T?> asNullable() => Computed(
-        () => this.value,
-        recomputeTriggers: [
-          this.onAfterChange,
-        ],
-      );
-
-  Getter<T> asNonNullable() => Computed(
-        () => this.value!,
         recomputeTriggers: [
           this.onAfterChange,
         ],
