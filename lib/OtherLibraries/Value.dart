@@ -157,7 +157,7 @@ extension FuncToSetter<ValueType> on void Function(ValueType) {
   }
 }
 
-extension GetterNullOperators<ValueType> on Getter<ValueType> {
+extension GetterNullOperators<ValueType> on Getter<ValueType?> {
   Getter<ReturnType?> q<ReturnType>(
       Getter<ReturnType>? doSomething(ValueType? value)) {
     return (doSomething(this.value) ?? null.g)
