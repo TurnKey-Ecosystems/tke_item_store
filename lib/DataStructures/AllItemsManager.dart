@@ -15,12 +15,24 @@ abstract class AllItemsManager {
   static Map<String, Set<String>> _itemIDsForEachItemType = {};
 
   // Gets the itemIDs belonging to the given itemType
-  static Set<String> getItemIDsForItemType(String itemType) {
-    if (_itemIDsForEachItemType[itemType] == null) {
-      return {};
-    } else {
-      return Set.from(_itemIDsForEachItemType[itemType]!);
-    }
+  static Getter<ObservableList<ItemClassType>>
+      getItemsForItemType<ItemClassType extends Item>(
+          String itemType, ItemClassType itemFromItemID(Value<String> itemID)) {
+    return Computed(
+      () {
+        ObservableList<ItemClassType> items = ObservableList();
+        if (_itemIDsForEachItemType[itemType] != null) {
+          Set<String> allItemIDs = Set.from(_itemIDsForEachItemType[itemType]!);
+          for (String itemID in allItemIDs) {
+            items.add(itemFromItemID(itemID.v).g);
+          }
+        }
+        return items;
+      },
+      recomputeTriggers: [
+        getOnItemOfTypeCreatedOrDestroyedEvent(itemType: itemType),
+      ],
+    );
   }
 
   // Return the instance of the requested item
