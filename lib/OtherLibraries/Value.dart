@@ -157,7 +157,7 @@ extension FuncToSetter<ValueType> on void Function(ValueType) {
   }
 }
 
-extension GetterNullOperators<ValueType> on Getter<ValueType?> {
+extension GetterNullOperators<ValueType> on Getter<ValueType> {
   Getter<ReturnType?> q<ReturnType>(
       Getter<ReturnType>? doSomething(ValueType? value)) {
     return (doSomething(this.value) ?? null.g)
@@ -182,22 +182,6 @@ extension GetterNullOperators<ValueType> on Getter<ValueType?> {
       Getter<ReturnType> doSomething(ValueType value)) {
     return doSomething(this.value!);
   }*/
-}
-
-extension GetterNonNullOperators<ValueType> on Getter<ValueType> {
-  Getter<ValueType?> asNullable() => Computed(
-        () => this.value,
-        recomputeTriggers: [
-          this.onAfterChange,
-        ],
-      );
-
-  Getter<ValueType> asNonNullable() => Computed(
-        () => this.value,
-        recomputeTriggers: [
-          this.onAfterChange,
-        ],
-      );
 }
 
 //typedef Num = Value<double>;
