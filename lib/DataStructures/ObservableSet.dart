@@ -11,7 +11,7 @@ extension ToObservableSet<ElementType> on Set<Getter<ElementType>> {
 
   /// Convert the set into a getter version of an observable set
   Getter<ObservableSet<ElementType>> get g {
-    return ConstGetter(
+    return Getter.ofNewVariable(
       ObservableSet(source: this),
     );
   }

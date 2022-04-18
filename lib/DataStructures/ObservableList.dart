@@ -11,7 +11,7 @@ extension ToObservableList<ElementType> on List<Getter<ElementType>> {
 
   /// Convert the list into a getter version of an observable list
   Getter<ObservableList<ElementType>> get g {
-    return ConstGetter(
+    return Getter.ofNewVariable(
       ObservableList(source: this),
     );
   }
