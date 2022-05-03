@@ -92,6 +92,14 @@ class ObservableSet<ElementType> implements Iterable<Getter<ElementType>> {
     onElementAddedOrRemoved.trigger();
   }
 
+  /// The number of elements in the set
+  late final Getter<double> lengthGetter = Computed(
+    () => _elements.length.toDouble(),
+    recomputeTriggers: [
+      onElementAddedOrRemoved,
+    ],
+  );
+
   /// Create a new set
   ObservableSet({Set<Getter<ElementType>>? source})
       : _elements = source ?? Set(),

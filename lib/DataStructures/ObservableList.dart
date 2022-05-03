@@ -122,6 +122,16 @@ class ObservableList<ElementType> implements Iterable<Getter<ElementType>> {
     onElementAddedOrRemoved.trigger();
   }
 
+  /// The number of elements in the list
+  Getter<double> get lengthGetter {
+    return Computed(
+      () => _elements.length.toDouble(),
+      recomputeTriggers: [
+        onElementAddedOrRemoved,
+      ],
+    );
+  }
+
   /// Create a new list
   ObservableList({Iterable<Getter<ElementType>> source = const []})
       : _elements = List.from(source),
