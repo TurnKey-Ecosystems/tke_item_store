@@ -9,34 +9,40 @@ class Computed<ValueType> implements Getter<ValueType> {
   final Event onAfterChange = Event();
 
   /// Compute the value
-  final ValueType Function() computeValue;
-  ValueType getValue() {
-    return computeValue();
-  }
+  final ValueType Function() _computeValue;
 
-  /// Compute the value
-  ValueType get value => getValue();
+  /// The computed value
+  late ValueType _cachedValue;
 
+  /// Return the computed value
+  ValueType getValue() => _cachedValue;
+
+  /// Return the computed value
+  ValueType get value => _cachedValue;
 
   /// Created a new computed value
   Computed(
-    this.computeValue,
-    {
-      required List<Event?> recomputeTriggers,
-    }
-  ) {
-    // If any of the dependencies change, then let listenners know
+    this._computeValue, {
+    required List<Event?> recomputeTriggers,
+  }) {
+    _cachedValue = _computeValue();
+
+    // If any of the dependencies change, then recompute and notify all listenners
     for (Event? event in recomputeTriggers) {
-      event?.addListener(onAfterChange.trigger);
+      event?.addListener(() {
+        _cachedValue = _computeValue();
+        onAfterChange.trigger();
+      });
     }
   }
-  
+
   @override
   String toString() {
     return GetterStore.getterToString(this);
   }
 
-  bool operator ==(dynamic other) => other is Getter<ValueType> && this.value == other.value;
+  bool operator ==(dynamic other) =>
+      other is Getter<ValueType> && this.value == other.value;
   @override
   int get hashCode => getValue().hashCode;
 }
