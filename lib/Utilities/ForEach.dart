@@ -16,8 +16,33 @@ class ForEach<InputValueType, ReturnValueType>
   /// Triggered any time there is a new value
   final Event onAfterChange = Event();
 
+  /// Cached value
+  late ObservableList<ReturnValueType> _cachedValue;
+
+  /// Return the computed value
+  ObservableList<ReturnValueType> getValue() => _cachedValue;
+
+  /// Return the computed value
+  ObservableList<ReturnValueType> get value => _cachedValue;
+
+  /// Created a new For computer
+  ForEach({
+    required this.list,
+    required this.each,
+  }) {
+    _cachedValue = _computeValue();
+    list.onAfterChange.addListener(() {
+      _cachedValue = _computeValue();
+      this.onAfterChange.trigger();
+    });
+    list.value.onElementAddedOrRemoved.addListener(() {
+      _cachedValue = _computeValue();
+      this.onAfterChange.trigger();
+    });
+  }
+
   /// Compute the value
-  ObservableList<ReturnValueType> getValue() {
+  ObservableList<ReturnValueType> _computeValue() {
     ObservableList<ReturnValueType> returnList = ObservableList();
     for (Getter<InputValueType> inputElement in list.value) {
       Getter<ReturnValueType>? returnElement = each(inputElement, returnList.g);
@@ -26,17 +51,6 @@ class ForEach<InputValueType, ReturnValueType>
       }
     }
     return returnList;
-  }
-
-  /// Compute the value
-  ObservableList<ReturnValueType> get value => getValue();
-
-  /// Created a new For computer
-  ForEach({
-    required this.list,
-    required this.each,
-  }) {
-    this.onAfterChange.subscribeTo(list.onAfterChange);
   }
 
   @override
