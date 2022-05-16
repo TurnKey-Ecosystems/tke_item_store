@@ -11,26 +11,43 @@ class Computed<ValueType> implements Getter<ValueType> {
   /// Compute the value
   final ValueType Function() _computeValue;
 
+  /// Whether or not we've cached a value yet.
+  bool _haveCachedValue = false;
+
   /// The computed value
-  late ValueType _cachedValue;
+  ValueType? _cachedValue;
 
   /// Return the computed value
-  ValueType getValue() => _cachedValue;
+  ValueType getValue() {
+    if (!_haveCachedValue) {
+      _cachedValue = _computeValue();
+      _haveCachedValue = true;
+    }
+    return _cachedValue!;
+  }
 
   /// Return the computed value
-  ValueType get value => _cachedValue;
+  ValueType get value => getValue();
 
   /// Created a new computed value
   Computed(
     this._computeValue, {
     required List<Event?> recomputeTriggers,
   }) {
-    _cachedValue = _computeValue();
+    try {
+      _cachedValue = _computeValue();
+      _haveCachedValue = true;
+    } catch (e) {}
 
     // If any of the dependencies change, then recompute and notify all listenners
     for (Event? event in recomputeTriggers) {
       event?.addListener(() {
-        _cachedValue = _computeValue();
+        try {
+          _cachedValue = _computeValue();
+          _haveCachedValue = true;
+        } catch (e) {
+          _haveCachedValue = false;
+        }
         onAfterChange.trigger();
       });
     }
