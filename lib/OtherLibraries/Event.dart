@@ -51,7 +51,10 @@ class Event {
         listenersIsModifiable = false,
         _trigger = const _EventTriggerWrapperUnchanging();
 
-  Future<void> addListener(Function? listener) async {
+  Future<void> addListener(Function? listener, {Event? removalTrigger}) async {
+    removalTrigger?.addListener(() {
+      this.removeListener(listener);
+    });
     await _when(() => _trigger.isProcessingTrigger == false);
     if (listener != null && listenersIsModifiable) {
       listeners.add(listener);
@@ -76,8 +79,8 @@ class Event {
     }
   }
 
-  void subscribeTo(Event event) {
-    trigger.subscribeTo(event);
+  void subscribeTo(Event event, {Event? removalTrigger}) {
+    trigger.subscribeTo(event, removalTrigger: removalTrigger);
   }
 
   void unsubscribeFrom(Event event) {
@@ -88,12 +91,12 @@ class Event {
 }
 
 extension on Function() {
-  void subscribeTo(Event event) {
+  void subscribeTo(Event event, {Event? removalTrigger}) {
     _recordSubscription(
       hashcode: this.hashCode,
       event: event,
     );
-    event.addListener(this);
+    event.addListener(this, removalTrigger: removalTrigger);
   }
 
   void unsubscribeFrom(Event event) {
