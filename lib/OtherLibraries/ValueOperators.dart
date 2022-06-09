@@ -113,6 +113,70 @@ extension GetterDoubleNullableOperators on Getter<num?> {
       ],
     );
   }
+
+  Getter<bool?> operator <(Getter<num?> other) {
+    return Computed(
+      () {
+        if (this.value != null && other.value != null) {
+          return this.value! < other.value!;
+        } else {
+          return null;
+        }
+      },
+      recomputeTriggers: [
+        this.onAfterChange,
+        other.onAfterChange,
+      ],
+    );
+  }
+
+  Getter<bool?> operator <=(Getter<num?> other) {
+    return Computed(
+      () {
+        if (this.value != null && other.value != null) {
+          return this.value! <= other.value!;
+        } else {
+          return null;
+        }
+      },
+      recomputeTriggers: [
+        this.onAfterChange,
+        other.onAfterChange,
+      ],
+    );
+  }
+
+  Getter<bool?> operator >=(Getter<num?> other) {
+    return Computed(
+      () {
+        if (this.value != null && other.value != null) {
+          return this.value! >= other.value!;
+        } else {
+          return null;
+        }
+      },
+      recomputeTriggers: [
+        this.onAfterChange,
+        other.onAfterChange,
+      ],
+    );
+  }
+
+  Getter<bool?> operator >(Getter<num?> other) {
+    return Computed(
+      () {
+        if (this.value != null && other.value != null) {
+          return this.value! > other.value!;
+        } else {
+          return null;
+        }
+      },
+      recomputeTriggers: [
+        this.onAfterChange,
+        other.onAfterChange,
+      ],
+    );
+  }
 }
 
 extension GetterDoubleNonNullableOperators on Getter<num> {
