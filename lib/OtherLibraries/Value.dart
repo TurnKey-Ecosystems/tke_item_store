@@ -157,6 +157,16 @@ extension FuncToSetter<ValueType> on void Function(ValueType) {
   }
 }
 
+Getter<ValueType> qq<ValueType>(
+        Getter<ValueType?> getterA, Getter<ValueType> getterB) =>
+    Computed(
+      () => getterA.value ?? getterB.value,
+      recomputeTriggers: [
+        getterA.onAfterChange,
+        getterB.onAfterChange,
+      ],
+    );
+
 extension GetterNullOperators<ValueType> on Getter<ValueType?> {
   Getter<ReturnType?> q<ReturnType>(
       Getter<ReturnType>? doSomething(ValueType? value)) {

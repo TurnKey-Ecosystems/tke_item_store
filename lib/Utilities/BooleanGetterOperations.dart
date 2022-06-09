@@ -26,11 +26,3 @@ Getter<bool> not(Getter<bool> getter) => Computed(
         getter.onAfterChange,
       ],
     );
-
-Getter<bool> qq(Getter<bool?> getterA, Getter<bool> getterB) => Computed(
-      () => getterA.value ?? getterB.value,
-      recomputeTriggers: [
-        getterA.onAfterChange,
-        getterB.onAfterChange,
-      ],
-    );
