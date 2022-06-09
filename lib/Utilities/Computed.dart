@@ -23,7 +23,7 @@ class Computed<ValueType> implements Getter<ValueType> {
       _cachedValue = _computeValue();
       _haveCachedValue = true;
     }
-    return _cachedValue!;
+    return _cachedValue as ValueType;
   }
 
   /// Return the computed value
