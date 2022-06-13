@@ -48,6 +48,7 @@ class Computed<ValueType> implements Getter<ValueType> {
         } catch (e) {
           _haveCachedValue = false;
         }
+        print('Getter ${getterID} recomputed.');
         onAfterChange.trigger();
       });
     }

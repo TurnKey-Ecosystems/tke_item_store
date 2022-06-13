@@ -169,11 +169,18 @@ Getter<ValueType> qq<ValueType>(
 
 extension GetterNullOperators<ValueType> on Getter<ValueType?> {
   Getter<ReturnType?> q<ReturnType>(
-      Getter<ReturnType>? doSomething(ValueType? value)) {
+      Getter<ReturnType?> doSomething(ValueType value)) {
     return Computed(
-      () => doSomething(this.value)?.value,
+      () {
+        if (this.value == null) {
+          return null;
+        } else {
+          return doSomething(this.value!).value;
+        }
+      },
       recomputeTriggers: [
         this.onAfterChange,
+        // Somew how we need to react to doSomething(this.value!).onAfterChange
       ],
     );
   }
