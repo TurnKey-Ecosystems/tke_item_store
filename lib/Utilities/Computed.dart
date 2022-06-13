@@ -45,6 +45,7 @@ class Computed<ValueType> implements Getter<ValueType> {
     // If any of the dependencies change, then recompute and notify all listenners
     for (Event? event in recomputeTriggers) {
       event?.addListener(() {
+        final oldCachedValue = _cachedValue;
         try {
           _cachedValue = _computeValue();
           _haveCachedValue = true;
@@ -54,7 +55,9 @@ class Computed<ValueType> implements Getter<ValueType> {
         if (tempShouldLog) {
           print('Getter ${getterID} recomputed.');
         }
-        onAfterChange.trigger();
+        if (_cachedValue != oldCachedValue) {
+          onAfterChange.trigger();
+        }
       });
     }
   }
