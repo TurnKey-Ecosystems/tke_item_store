@@ -169,6 +169,16 @@ Getter<ValueType> qq<ValueType>(
 
 extension GetterNullOperators<ValueType> on Getter<ValueType?> {
   Getter<ReturnType?> q<ReturnType>(
+      Getter<ReturnType>? doSomething(ValueType? value)) {
+    return Computed(
+      () => doSomething(this.value)?.value,
+      recomputeTriggers: [
+        this.onAfterChange,
+      ],
+    );
+  }
+  /*
+  Getter<ReturnType?> q<ReturnType>(
       Getter<ReturnType?> doSomething(ValueType value)) {
     return Computed(
       () {
@@ -180,10 +190,10 @@ extension GetterNullOperators<ValueType> on Getter<ValueType?> {
       },
       recomputeTriggers: [
         this.onAfterChange,
-        // Somew how we need to react to doSomething(this.value!).onAfterChange
+        // Somew how we need to
       ],
     );
-  }
+  }*/
 
   Getter<ValueType?> asNullable() => Computed(
         () => this.value,
