@@ -52,11 +52,13 @@ abstract class _AttributeProperty<PropertyType> extends Attribute
     required SyncDepth syncDepth,
     required this.valueOnCreateNew,
     required Getter<SingleItemManager> itemManager,
+    required Item itemClassInstance,
   })  : _value = valueOnCreateNew,
         super(
           attributeKey: attributeKey,
           syncDepth: syncDepth,
           itemManager: itemManager,
+          itemClassInstance: itemClassInstance,
         );
 
   /** Gets the attribute init change object for this attribute. */
@@ -85,11 +87,13 @@ class AttributeBool extends _AttributeProperty<bool> {
     required SyncDepth syncDepth,
     required bool valueOnCreateNew,
     required Getter<SingleItemManager> itemManager,
+    required Item itemClassInstance,
   }) : super(
           attributeKey: attributeKey,
           syncDepth: syncDepth,
           valueOnCreateNew: valueOnCreateNew,
           itemManager: itemManager,
+          itemClassInstance: itemClassInstance,
         );
 }
 
@@ -100,11 +104,13 @@ class AttributeInt extends _AttributeProperty<int> {
     required SyncDepth syncDepth,
     required int valueOnCreateNew,
     required Getter<SingleItemManager> itemManager,
+    required Item itemClassInstance,
   }) : super(
           attributeKey: attributeKey,
           syncDepth: syncDepth,
           valueOnCreateNew: valueOnCreateNew,
           itemManager: itemManager,
+          itemClassInstance: itemClassInstance,
         );
 }
 
@@ -115,11 +121,13 @@ class AttributeDouble extends _AttributeProperty<double> {
     required SyncDepth syncDepth,
     required double valueOnCreateNew,
     required Getter<SingleItemManager> itemManager,
+    required Item itemClassInstance,
   }) : super(
           attributeKey: attributeKey,
           syncDepth: syncDepth,
           valueOnCreateNew: valueOnCreateNew,
           itemManager: itemManager,
+          itemClassInstance: itemClassInstance,
         );
 }
 
@@ -130,11 +138,13 @@ class AttributeString extends _AttributeProperty<String> {
     required SyncDepth syncDepth,
     required String valueOnCreateNew,
     required Getter<SingleItemManager> itemManager,
+    required Item itemClassInstance,
   }) : super(
           attributeKey: attributeKey,
           syncDepth: syncDepth,
           valueOnCreateNew: valueOnCreateNew,
           itemManager: itemManager,
+          itemClassInstance: itemClassInstance,
         );
 }
 
@@ -145,10 +155,12 @@ class AttributeSessionObject<ObjectType>
     required String attributeKey,
     required ObjectType valueOnCreateNew,
     required Getter<SingleItemManager> itemManager,
+    required Item itemClassInstance,
   }) : super(
           attributeKey: attributeKey,
           syncDepth: SyncDepth.SESSION,
           valueOnCreateNew: valueOnCreateNew,
           itemManager: itemManager,
+          itemClassInstance: itemClassInstance,
         );
 }

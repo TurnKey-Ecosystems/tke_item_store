@@ -47,10 +47,12 @@ class AttributeStringSet extends Attribute {
     required String attributeKey,
     required SyncDepth syncDepth,
     required Getter<SingleItemManager> itemManager,
+    required Item itemClassInstance,
   }) : super(
           attributeKey: attributeKey,
           syncDepth: syncDepth,
           itemManager: itemManager,
+          itemClassInstance: itemClassInstance,
         );
 
   /** Gets the attribute init change object for this attribute. */

@@ -95,10 +95,12 @@ class AttributeItemSet<ItemClassType extends Item> extends Attribute
     required this.getItemFromItemID,
     required this.shouldDeleteContentsWhenItemIsDeleted,
     required Getter<SingleItemManager> itemManager,
+    required Item itemClassInstance,
   }) : super(
           attributeKey: attributeKey,
           syncDepth: syncDepth,
           itemManager: itemManager,
+          itemClassInstance: itemClassInstance,
         ) {
     // If this is a defining relationship, then delete the contents of this Set when the item is deleted
     if (shouldDeleteContentsWhenItemIsDeleted) {

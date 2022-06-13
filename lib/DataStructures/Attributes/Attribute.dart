@@ -37,7 +37,11 @@ abstract class Attribute {
     required this.attributeKey,
     required this.syncDepth,
     required Getter<SingleItemManager> itemManager,
+    required Item itemClassInstance,
   }) : _itemManager = itemManager {
+    // This is scrappy, but since it's associated with the calss it should be okay for now
+    itemClassInstance._allDevDefinedAttributes.add(this);
+
     // Respond to changes in the item managers
     attributeInstance.value.onAfterChange.addListener(onAfterChange.trigger);
     _oldItemID = ''.v;

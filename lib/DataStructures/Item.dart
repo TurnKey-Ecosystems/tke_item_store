@@ -13,6 +13,7 @@ abstract class Item {
     attributeKey: "tfc_containedIn",
     syncDepth: SyncDepth.CLOUD,
     itemManager: itemManager,
+    itemClassInstance: this,
   );
 
   // The instnace of this item
@@ -36,13 +37,16 @@ abstract class Item {
   late final Value<String> _oldItemID;
   final Event onDelete = Event();
 
-  /// Item subtypes should override this
-  List<Attribute> getAllAttributes() {
-    return [];
+  /// All dev defiend attribtues on this item
+  final List<Attribute> _allDevDefinedAttributes = [];
+
+  /// All dev defiend attribtues on this item
+  List<Attribute> get allDevDefinedAttributes {
+    return _allDevDefinedAttributes;
   }
 
   List<Attribute> _getAllAttributes() {
-    List<Attribute> allAttributes = getAllAttributes();
+    List<Attribute> allAttributes = List.from(allDevDefinedAttributes);
     allAttributes.add(_containedIn);
     return allAttributes;
   }

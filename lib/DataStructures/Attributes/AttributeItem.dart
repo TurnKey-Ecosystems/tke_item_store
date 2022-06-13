@@ -51,10 +51,12 @@ class AttributeItem<ItemClassType extends Item?> extends Attribute
     required this.getDefaultItemOnCreateNew,
     required this.getItemFromItemID,
     required Getter<SingleItemManager> itemManager,
+    required Item itemClassInstance,
   }) : super(
           attributeKey: attributeKey,
           syncDepth: syncDepth,
           itemManager: itemManager,
+          itemClassInstance: itemClassInstance,
         );
 
   /** Gets the attribute init change object for this attribute. */
