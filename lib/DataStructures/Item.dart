@@ -45,6 +45,11 @@ abstract class Item {
     return _allDevDefinedAttributes;
   }
 
+  @deprecated
+  List<Attribute> getAllAttributes() {
+    return _allDevDefinedAttributes;
+  }
+
   List<Attribute> _getAllAttributes() {
     List<Attribute> allAttributes = List.from(allDevDefinedAttributes);
     allAttributes.add(_containedIn);
