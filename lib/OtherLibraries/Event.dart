@@ -56,25 +56,33 @@ class Event {
         tempShouldLog = false,
         _trigger = const _EventTriggerWrapperUnchanging();
 
-  Future<void> addListener(Function? listener, {Event? removalTrigger}) async {
+  void addListener(Function? listener, {Event? removalTrigger}) {
     removalTrigger?.addListener(() {
       this.removeListener(listener);
     });
-    if (_trigger.isProcessingTrigger) {
-      print('Delaying adding listener ${listener.hashCode}!');
-    }
-    await _when(() => _trigger.isProcessingTrigger == false);
     if (listener != null && listenersIsModifiable) {
-      listeners.add(listener);
-      // Temp
-      listener();
+      if (_trigger.isProcessingTrigger) {
+        () async {
+          await _when(() => _trigger.isProcessingTrigger == false);
+          listeners.add(listener);
+        }();
+        print('Delaying adding listener ${listener.hashCode}!');
+      } else {
+        listeners.add(listener);
+      }
     }
   }
 
-  Future<void> removeListener(Function? listener) async {
-    await _when(() => _trigger.isProcessingTrigger == false);
+  void removeListener(Function? listener) {
     if (listenersIsModifiable) {
-      listeners.remove(listener);
+      if (_trigger.isProcessingTrigger) {
+        () async {
+          await _when(() => _trigger.isProcessingTrigger == false);
+          listeners.remove(listener);
+        }();
+      } else {
+        listeners.remove(listener);
+      }
     }
   }
 
