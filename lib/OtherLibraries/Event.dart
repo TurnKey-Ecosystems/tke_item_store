@@ -66,6 +66,8 @@ class Event {
     await _when(() => _trigger.isProcessingTrigger == false);
     if (listener != null && listenersIsModifiable) {
       listeners.add(listener);
+      // Temp
+      listener();
     }
   }
 
