@@ -60,6 +60,9 @@ class Event {
     removalTrigger?.addListener(() {
       this.removeListener(listener);
     });
+    if (_trigger.isProcessingTrigger) {
+      print('Delaying adding listener ${listener.hashCode}!');
+    }
     await _when(() => _trigger.isProcessingTrigger == false);
     if (listener != null && listenersIsModifiable) {
       listeners.add(listener);
