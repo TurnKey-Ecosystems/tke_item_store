@@ -6,7 +6,7 @@ class Computed<ValueType> implements Getter<ValueType> {
   late final String getterID = GetterStore.registerWithGetterStore(this);
 
   /// Triggered any time there is a new value
-  final Event onAfterChange = Event();
+  final Event onAfterChange; // = Event();
 
   /// Compute the value
   final ValueType Function() _computeValue;
@@ -36,7 +36,7 @@ class Computed<ValueType> implements Getter<ValueType> {
     this._computeValue, {
     required List<Event?> recomputeTriggers,
     this.tempShouldLog = false,
-  }) {
+  }) : onAfterChange = Event(tempShouldLog: tempShouldLog) {
     try {
       _cachedValue = _computeValue();
       _haveCachedValue = true;
