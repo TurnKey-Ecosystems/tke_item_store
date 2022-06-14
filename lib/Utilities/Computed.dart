@@ -11,6 +11,9 @@ class Computed<ValueType> implements Getter<ValueType> {
   /// Compute the value
   final ValueType Function() _computeValue;
 
+  /// Compute the value
+  late final int tempRecomputeHashCode;
+
   /// Whether or not we've cached a value yet.
   bool _haveCachedValue = false;
 
@@ -39,20 +42,22 @@ class Computed<ValueType> implements Getter<ValueType> {
       _haveCachedValue = true;
     } catch (e) {}
 
-    // If any of the dependencies change, then recompute and notify all listenners
+    // If any of the dependencies change, then recompute and notify listenners
+    final recompute = () {
+      final oldCachedValue = _cachedValue;
+      try {
+        _cachedValue = _computeValue();
+        _haveCachedValue = true;
+      } catch (e) {
+        _haveCachedValue = false;
+      }
+      if (_cachedValue != oldCachedValue) {
+        onAfterChange.trigger();
+      }
+    };
+    tempRecomputeHashCode = recompute.hashCode;
     for (Event? event in recomputeTriggers) {
-      event?.addListener(() {
-        final oldCachedValue = _cachedValue;
-        try {
-          _cachedValue = _computeValue();
-          _haveCachedValue = true;
-        } catch (e) {
-          _haveCachedValue = false;
-        }
-        if (_cachedValue != oldCachedValue) {
-          onAfterChange.trigger();
-        }
-      });
+      event?.addListener(recompute);
     }
   }
 
