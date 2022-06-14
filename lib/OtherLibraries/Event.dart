@@ -2,25 +2,22 @@ import 'dart:developer';
 
 abstract class _EventTriggerWrapper {
   bool get isProcessingTrigger;
-  void call(List<Function?> listeners, bool tempShouldLog);
+  void call(List<Function?> listeners);
 }
 
 class _EventTriggerWrapperUnchanging implements _EventTriggerWrapper {
   final bool isProcessingTrigger;
-  void call(List<Function?> listeners, bool tempShouldLog) {}
+  void call(List<Function?> listeners) {}
   const _EventTriggerWrapperUnchanging() : isProcessingTrigger = false;
 }
 
 class _EventTriggerWrapperChanging implements _EventTriggerWrapper {
   int _triggerCount = 0;
   bool get isProcessingTrigger => _triggerCount > 0;
-  void call(List<Function?> listeners, bool tempShouldLog) {
+  void call(List<Function?> listeners) {
     _triggerCount++;
     int nullListenerCount = 0;
     for (Function? listener in listeners) {
-      if (tempShouldLog) {
-        print('Triggering listener ${listener?.hashCode};');
-      }
       if (listener != null) {
         try {
           listener();
@@ -43,9 +40,8 @@ class Event {
   final _EventTriggerWrapper _trigger;
 
   final bool listenersIsModifiable;
-  final bool tempShouldLog;
 
-  Event({this.tempShouldLog = false})
+  Event()
       : listeners = [],
         listenersIsModifiable = true,
         _trigger = _EventTriggerWrapperChanging();
@@ -53,7 +49,6 @@ class Event {
   const Event.unchanging()
       : listeners = const [],
         listenersIsModifiable = false,
-        tempShouldLog = false,
         _trigger = const _EventTriggerWrapperUnchanging();
 
   void addListener(Function? listener, {Event? removalTrigger}) {
@@ -61,7 +56,7 @@ class Event {
       this.removeListener(listener);
     });
     if (listener != null && listenersIsModifiable) {
-      if (_trigger.isProcessingTrigger) {
+      /*if (_trigger.isProcessingTrigger) {
         () async {
           await _when(() => _trigger.isProcessingTrigger == false);
           listeners.add(listener);
@@ -69,25 +64,27 @@ class Event {
         print('Delaying adding listener ${listener.hashCode}!');
       } else {
         listeners.add(listener);
-      }
+      }*/
+      listeners.add(listener);
     }
   }
 
   void removeListener(Function? listener) {
     if (listenersIsModifiable) {
-      if (_trigger.isProcessingTrigger) {
+      /*if (_trigger.isProcessingTrigger) {
         () async {
           await _when(() => _trigger.isProcessingTrigger == false);
           listeners.remove(listener);
         }();
       } else {
         listeners.remove(listener);
-      }
+      }*/
+      listeners.remove(listener);
     }
   }
 
   void trigger() {
-    _trigger(listeners, tempShouldLog);
+    _trigger(listeners);
   }
 
   static Future<void> _when(bool Function() condition) async {

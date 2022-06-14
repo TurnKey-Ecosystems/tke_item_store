@@ -29,14 +29,11 @@ class Computed<ValueType> implements Getter<ValueType> {
   /// Return the computed value
   ValueType get value => getValue();
 
-  final bool tempShouldLog;
-
   /// Created a new computed value
   Computed(
     this._computeValue, {
     required List<Event?> recomputeTriggers,
-    this.tempShouldLog = false,
-  }) : onAfterChange = Event(tempShouldLog: tempShouldLog) {
+  }) : onAfterChange = Event() {
     try {
       _cachedValue = _computeValue();
       _haveCachedValue = true;
@@ -51,9 +48,6 @@ class Computed<ValueType> implements Getter<ValueType> {
           _haveCachedValue = true;
         } catch (e) {
           _haveCachedValue = false;
-        }
-        if (tempShouldLog) {
-          print('Getter ${getterID} recomputed.');
         }
         if (_cachedValue != oldCachedValue) {
           onAfterChange.trigger();
