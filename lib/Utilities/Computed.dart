@@ -25,6 +25,9 @@ class Computed<ValueType> implements Getter<ValueType> {
     }
   }
 
+  /// The recompute triggers for this computed
+  final List<Event?> recomputeTriggers;
+
   /// Compute the value
   late final int tempRecomputeHashCode;
 
@@ -49,7 +52,7 @@ class Computed<ValueType> implements Getter<ValueType> {
   /// Created a new computed value
   Computed(
     this.computeValue, {
-    required List<Event?> recomputeTriggers,
+    required this.recomputeTriggers,
   }) : onAfterChange = Event() {
     try {
       _cachedValue = computeValue();
