@@ -8,8 +8,22 @@ class Computed<ValueType> implements Getter<ValueType> {
   /// Triggered any time there is a new value
   final Event onAfterChange; // = Event();
 
-  /// Compute the value
-  final ValueType Function() _computeValue;
+  /// Compute the value. Only change this if you know what you are doing.
+  ValueType Function() computeValue;
+
+  /// Recompute the value. Only change this if you know what you are doing.
+  void recompute() {
+    final oldCachedValue = _cachedValue;
+    try {
+      _cachedValue = computeValue();
+      _haveCachedValue = true;
+    } catch (e) {
+      _haveCachedValue = false;
+    }
+    if (_cachedValue != oldCachedValue) {
+      onAfterChange.trigger();
+    }
+  }
 
   /// Compute the value
   late final int tempRecomputeHashCode;
@@ -23,7 +37,7 @@ class Computed<ValueType> implements Getter<ValueType> {
   /// Return the computed value
   ValueType getValue() {
     if (!_haveCachedValue) {
-      _cachedValue = _computeValue();
+      _cachedValue = computeValue();
       _haveCachedValue = true;
     }
     return _cachedValue as ValueType;
@@ -34,27 +48,15 @@ class Computed<ValueType> implements Getter<ValueType> {
 
   /// Created a new computed value
   Computed(
-    this._computeValue, {
+    this.computeValue, {
     required List<Event?> recomputeTriggers,
   }) : onAfterChange = Event() {
     try {
-      _cachedValue = _computeValue();
+      _cachedValue = computeValue();
       _haveCachedValue = true;
     } catch (e) {}
 
     // If any of the dependencies change, then recompute and notify listenners
-    final recompute = () {
-      final oldCachedValue = _cachedValue;
-      try {
-        _cachedValue = _computeValue();
-        _haveCachedValue = true;
-      } catch (e) {
-        _haveCachedValue = false;
-      }
-      if (_cachedValue != oldCachedValue) {
-        onAfterChange.trigger();
-      }
-    };
     tempRecomputeHashCode = recompute.hashCode;
     for (Event? event in recomputeTriggers) {
       event?.addListener(recompute);
