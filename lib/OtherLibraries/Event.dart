@@ -30,6 +30,9 @@ class _EventTriggerWrapperChanging implements _EventTriggerWrapper {
       } else {
         nullListenerCount++;
       }
+      if (shouldLog) {
+        print('Event - Finished ${listener.hashCode}');
+      }
     }
     for (; nullListenerCount > 0; nullListenerCount--) {
       listeners.remove(null);
