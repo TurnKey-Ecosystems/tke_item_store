@@ -71,6 +71,7 @@ class Event {
         () async {
           await _when(() => _trigger.isProcessingTrigger == false);
           listeners.add(listener);
+          listener();
         }();
         print('Delaying adding listener ${listener.hashCode}!');
       } else {
