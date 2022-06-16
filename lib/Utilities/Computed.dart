@@ -36,7 +36,8 @@ class Computed<ValueType> implements Getter<ValueType> {
   Computed(
     this._computeValue, {
     required List<Event?> recomputeTriggers,
-  }) : onAfterChange = Event() {
+    bool shouldLog = false,
+  }) : onAfterChange = Event(shouldLog: shouldLog) {
     try {
       _cachedValue = _computeValue();
       _haveCachedValue = true;

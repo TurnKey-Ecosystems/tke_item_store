@@ -2,22 +2,25 @@ import 'dart:developer';
 
 abstract class _EventTriggerWrapper {
   bool get isProcessingTrigger;
-  void call(List<Function?> listeners);
+  void call(List<Function?> listeners, bool shouldLog);
 }
 
 class _EventTriggerWrapperUnchanging implements _EventTriggerWrapper {
   final bool isProcessingTrigger;
-  void call(List<Function?> listeners) {}
+  void call(List<Function?> listeners, bool shouldLog) {}
   const _EventTriggerWrapperUnchanging() : isProcessingTrigger = false;
 }
 
 class _EventTriggerWrapperChanging implements _EventTriggerWrapper {
   int _triggerCount = 0;
   bool get isProcessingTrigger => _triggerCount > 0;
-  void call(List<Function?> listeners) {
+  void call(List<Function?> listeners, bool shouldLog) {
     _triggerCount++;
     int nullListenerCount = 0;
     for (Function? listener in listeners) {
+      if (shouldLog) {
+        print('Event - About to call ${listener.hashCode}');
+      }
       if (listener != null) {
         try {
           listener();
@@ -40,8 +43,9 @@ class Event {
   final _EventTriggerWrapper _trigger;
 
   final bool listenersIsModifiable;
+  final bool shouldLog;
 
-  Event()
+  Event({this.shouldLog = false})
       : listeners = [],
         listenersIsModifiable = true,
         _trigger = _EventTriggerWrapperChanging();
@@ -49,6 +53,7 @@ class Event {
   const Event.unchanging()
       : listeners = const [],
         listenersIsModifiable = false,
+        shouldLog = false,
         _trigger = const _EventTriggerWrapperUnchanging();
 
   void addListener(Function? listener, {Event? removalTrigger}) {
@@ -84,7 +89,7 @@ class Event {
   }
 
   void trigger() {
-    _trigger(listeners);
+    _trigger(listeners, shouldLog);
   }
 
   static Future<void> _when(bool Function() condition) async {
