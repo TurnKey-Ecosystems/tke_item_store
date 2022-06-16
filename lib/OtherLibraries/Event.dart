@@ -19,7 +19,7 @@ class _EventTriggerWrapperChanging implements _EventTriggerWrapper {
     int nullListenerCount = 0;
     for (Function? listener in listeners) {
       if (shouldLog) {
-        print('Event - About to call ${listener.hashCode}');
+        print('Event - ${_triggerCount} - About to call ${listener.hashCode}');
       }
       if (listener != null) {
         try {
