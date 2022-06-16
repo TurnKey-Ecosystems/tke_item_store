@@ -17,9 +17,10 @@ class _EventTriggerWrapperChanging implements _EventTriggerWrapper {
   void call(List<Function?> listeners, bool shouldLog) {
     _triggerCount++;
     int nullListenerCount = 0;
+    int listenerIndex = 0;
     for (Function? listener in listeners) {
       if (shouldLog) {
-        print('Event - ${_triggerCount} - About to call ${listener.hashCode}');
+        print('Event - ${listenerIndex} - About to call ${listener.hashCode}');
       }
       if (listener != null) {
         try {
@@ -34,6 +35,7 @@ class _EventTriggerWrapperChanging implements _EventTriggerWrapper {
         print('Event - Finished ${listener.hashCode}');
         print('Event - listener count ${listeners.length}');
       }
+      listenerIndex++;
     }
     for (; nullListenerCount > 0; nullListenerCount--) {
       listeners.remove(null);
@@ -65,7 +67,7 @@ class Event {
       this.removeListener(listener);
     });
     if (listener != null && listenersIsModifiable) {
-      /*if (_trigger.isProcessingTrigger) {
+      if (_trigger.isProcessingTrigger) {
         () async {
           await _when(() => _trigger.isProcessingTrigger == false);
           listeners.add(listener);
@@ -73,8 +75,8 @@ class Event {
         print('Delaying adding listener ${listener.hashCode}!');
       } else {
         listeners.add(listener);
-      }*/
-      listeners.add(listener);
+      }
+      //listeners.add(listener);
     }
   }
 
