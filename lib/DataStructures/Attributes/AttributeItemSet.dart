@@ -48,7 +48,7 @@ class AttributeItemSet<ItemClassType extends Item> extends Attribute
           changeApplicationDepth: syncDepth,
           itemID: _itemManager.value.itemID,
           attributeKey: attributeKey,
-          value: itemToRemove.itemID,
+          value: itemToRemove.itemID.value,
         ),
       ],
     );
@@ -58,14 +58,12 @@ class AttributeItemSet<ItemClassType extends Item> extends Attribute
   final bool shouldDeleteContentsWhenItemIsDeleted;
 
   // Keeps track of the onDelete listenners by item
-  static Map<String, Map<String, void Function()>>
-      _deleteContentsOnItemDeleteListeners = {};
+  static Map<String, Map<String, void Function()>> _deleteContentsOnItemDeleteListeners = {};
 
   // This will setup a listener to delete all contents when the parent item is deleted
   void _listenToOnDeleteAndDeleteContents() {
     // Ensure a slot exists for this item
-    if (!_deleteContentsOnItemDeleteListeners
-        .containsKey(_itemManager.value.itemID)) {
+    if (!_deleteContentsOnItemDeleteListeners.containsKey(_itemManager.value.itemID)) {
       _deleteContentsOnItemDeleteListeners[_itemManager.value.itemID] = {};
     }
 

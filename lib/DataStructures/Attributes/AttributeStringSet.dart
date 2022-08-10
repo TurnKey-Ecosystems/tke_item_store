@@ -5,8 +5,7 @@ class AttributeStringSet extends Attribute {
   /// Allow devs to access the elements in this set
   Set<String> get allElements {
     Set<String> allElements = {};
-    for (String element
-        in attributeInstance.value.getAllValuesAsSet<String>()) {
+    for (String element in attributeInstance.value.getAllValuesAsSet<String>()) {
       allElements.add(
         element,
       );
