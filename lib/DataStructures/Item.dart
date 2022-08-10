@@ -92,8 +92,7 @@ abstract class Item {
   static Value<String> _doFirstTimeSetUp({
     required String itemType,
   }) {
-    Value<String> itemID =
-        AllItemsManager.requestNewItemID(itemType: itemType).v;
+    Value<String> itemID = AllItemsManager.requestNewItemID(itemType: itemType).v;
     AllItemsManager.applyChangesIfRelevant(changes: [
       ChangeItemCreation(
         changeApplicationDepth: SyncDepth.CLOUD,
@@ -117,9 +116,7 @@ abstract class Item {
     itemManager.value.onDelete.addListener(onDelete.trigger);
     this.itemID.onAfterChange.addListener(() {
       // Stop listening to the old item instance
-      AllItemsManager.getItemInstance(_oldItemID.value)
-          ?.onDelete
-          .removeListener(onDelete.trigger);
+      AllItemsManager.getItemInstance(_oldItemID.value)?.onDelete.removeListener(onDelete.trigger);
       _oldItemID.value = itemID.value;
 
       // Start listening to changes in the new item instance
@@ -158,7 +155,7 @@ abstract class Item {
         ChangeAttributeRemoveValue(
           itemID: containingItemID,
           attributeKey: containingSetKey,
-          value: itemID,
+          value: itemID.value,
           changeApplicationDepth: SyncDepth.CLOUD,
         ),
       );

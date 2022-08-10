@@ -10,36 +10,30 @@ enum ChangeType {
   ATTRIBUTE_REMOVE_VALUE,
 }
 
-
 // Describes a change made to items
 abstract class Change {
   // The change details for the specifc type of change
   //late final Map<String, dynamic> _changeDetails;
-
 
   // Versioning
   static const int _CURRENT_API_VERSION = 1;
   static const String _API_VERSION_KEY = "apiVersion";
   final int apiVersion;
 
-
   // The type of change
   static const String _CHANGE_TYPE_KEY = "changeTypeIndex";
   final ChangeType changeType;
-  
 
   // The sync depth of this change
   static const String _CHANGE_APPLICATION_DEPTH_KEY = "syncDepth";
   SyncDepth changeApplicationDepth;
 
-
   // The time, in milliseconds since epoch, this change was made
   static const String _CHANGE_TIME_POSIX_KEY = "changeTimePosix";
   final int changeTimePosix;
-  
+
   // The itemID of the item that was changed
   final String itemID;
-  
 
   /** Create a new change object */
   Change._({
@@ -47,19 +41,16 @@ abstract class Change {
     required this.changeApplicationDepth,
     required this.itemID,
     int? changeTimePosix,
-  })
-    : this.apiVersion = _CURRENT_API_VERSION,
-      this.changeTimePosix = changeTimePosix ?? DateTime.now().millisecondsSinceEpoch;
+  })  : this.apiVersion = _CURRENT_API_VERSION,
+        this.changeTimePosix = changeTimePosix ?? DateTime.now().millisecondsSinceEpoch;
 
   /** Creates a change object fron a json */
   Change._fromJson(dynamic json)
-    : this.apiVersion = json[_API_VERSION_KEY],
-      this.changeType =
-        ChangeType.values[json[_CHANGE_TYPE_KEY]],
-      this.changeApplicationDepth =
-        SyncDepth.values[json[_CHANGE_APPLICATION_DEPTH_KEY]],
-      this.itemID = json[SingleItemManager.ITEM_ID_KEY],
-      this.changeTimePosix = json[_CHANGE_TIME_POSIX_KEY];
+      : this.apiVersion = json[_API_VERSION_KEY],
+        this.changeType = ChangeType.values[json[_CHANGE_TYPE_KEY]],
+        this.changeApplicationDepth = SyncDepth.values[json[_CHANGE_APPLICATION_DEPTH_KEY]],
+        this.itemID = json[SingleItemManager.ITEM_ID_KEY],
+        this.changeTimePosix = json[_CHANGE_TIME_POSIX_KEY];
 
   /** Covnerts this change log to a json */
   Map<String, dynamic> toJson() {
@@ -71,12 +62,11 @@ abstract class Change {
       _CHANGE_TIME_POSIX_KEY: changeTimePosix,
     };
   }
-  
 
   /** Load a change object from a json as the correct dart class.  */
   static Change fromJson(dynamic json) {
     ChangeType changeType = ChangeType.values[json[_CHANGE_TYPE_KEY]];
-    switch(changeType) {
+    switch (changeType) {
       case ChangeType.ITEM_CREATION:
         return ChangeItemCreation.fromJson(json);
       case ChangeType.ITEM_DELETION:
@@ -94,7 +84,7 @@ abstract class Change {
 
   /** Get the class type corresponding to the change type.  */
   static Type changeClassFromChangeType(ChangeType changeType) {
-    switch(changeType) {
+    switch (changeType) {
       case ChangeType.ITEM_CREATION:
         return ChangeItemCreation;
       case ChangeType.ITEM_DELETION:
@@ -111,8 +101,6 @@ abstract class Change {
   }
 }
 
-
-
 /** Item creation and deletion change types */
 abstract class ChangeItemExistance extends Change {
   // The itemType of the item that was changed
@@ -124,18 +112,17 @@ abstract class ChangeItemExistance extends Change {
     required SyncDepth changeApplicationDepth,
     required this.itemType,
     required String itemID,
-  })
-    : super._(
-      changeType: changeType,
-      changeApplicationDepth: changeApplicationDepth,
-      itemID: itemID,
-    );
+  }) : super._(
+          changeType: changeType,
+          changeApplicationDepth: changeApplicationDepth,
+          itemID: itemID,
+        );
 
   /** Loads a item existance change from a json. */
   ChangeItemExistance.fromJson(dynamic json)
-    : this.itemType = json[SingleItemManager.ITEM_TYPE_KEY],
-      super._fromJson(json);
-  
+      : this.itemType = json[SingleItemManager.ITEM_TYPE_KEY],
+        super._fromJson(json);
+
   /** Converts an Item existance change to a json. */
   @override
   Map<String, dynamic> toJson() {
@@ -152,13 +139,12 @@ class ChangeItemCreation extends ChangeItemExistance {
     required String itemType,
     required String itemID,
     required SyncDepth changeApplicationDepth,
-  })
-    : super(
-      changeType: ChangeType.ITEM_CREATION,
-      changeApplicationDepth: changeApplicationDepth,
-      itemType: itemType,
-      itemID: itemID,
-    );
+  }) : super(
+          changeType: ChangeType.ITEM_CREATION,
+          changeApplicationDepth: changeApplicationDepth,
+          itemType: itemType,
+          itemID: itemID,
+        );
 
   /** Loads an item creation change from a json. */
   ChangeItemCreation.fromJson(dynamic json) : super.fromJson(json);
@@ -171,19 +157,16 @@ class ChangeItemDeletion extends ChangeItemExistance {
     required String itemType,
     required String itemID,
     required SyncDepth changeApplicationDepth,
-  })
-    : super(
-      changeType: ChangeType.ITEM_DELETION,
-      changeApplicationDepth: changeApplicationDepth,
-      itemType: itemType,
-      itemID: itemID,
-    );
+  }) : super(
+          changeType: ChangeType.ITEM_DELETION,
+          changeApplicationDepth: changeApplicationDepth,
+          itemType: itemType,
+          itemID: itemID,
+        );
 
   /** Loads an item deletion change from a json. */
   ChangeItemDeletion.fromJson(dynamic json) : super.fromJson(json);
 }
-
-
 
 /** Attribute change types */
 abstract class AttributeChange extends Change {
@@ -198,7 +181,6 @@ abstract class AttributeChange extends Change {
   // A generic value related to the type of change
   static const String _VALUE_KEY = "value";
   final dynamic value;
-  
 
   /** Creates a new attribute change. */
   AttributeChange({
@@ -209,21 +191,20 @@ abstract class AttributeChange extends Change {
     required this.attributeKey,
     required this.value,
     int? changeTimePosix,
-  })
-    : super._(
-      changeType: changeType,
-      changeApplicationDepth: changeApplicationDepth,
-      itemID: itemID,
-      changeTimePosix: changeTimePosix,
-    );
+  }) : super._(
+          changeType: changeType,
+          changeApplicationDepth: changeApplicationDepth,
+          itemID: itemID,
+          changeTimePosix: changeTimePosix,
+        );
 
   /** Loads an atribute change from a json. */
   AttributeChange.fromJson(dynamic json)
-    : this.attributeType = AttributeType.values[json[_ATTRIBUTE_TYPE_KEY]],
-      this.attributeKey = json[_ATTRIBUTE_KEY_KEY],
-      this.value = json[_VALUE_KEY],
-      super._fromJson(json);
-  
+      : this.attributeType = AttributeType.values[json[_ATTRIBUTE_TYPE_KEY]],
+        this.attributeKey = json[_ATTRIBUTE_KEY_KEY],
+        this.value = json[_VALUE_KEY],
+        super._fromJson(json);
+
   /** Converts an Item existance change to a json. */
   @override
   Map<String, dynamic> toJson() {
@@ -244,14 +225,14 @@ class ChangeAttributeInit extends AttributeChange {
     required String attributeKey,
     required dynamic value,
   }) : super(
-      changeType: ChangeType.ATTRIBUTE_INIT,
-      changeApplicationDepth: changeApplicationDepth,
-      itemID: itemID,
-      attributeType: AttributeType.PROPERTY,
-      attributeKey: attributeKey,
-      value: value,
-      changeTimePosix: 0,
-    );
+          changeType: ChangeType.ATTRIBUTE_INIT,
+          changeApplicationDepth: changeApplicationDepth,
+          itemID: itemID,
+          attributeType: AttributeType.PROPERTY,
+          attributeKey: attributeKey,
+          value: value,
+          changeTimePosix: 0,
+        );
 
   /** Creates an attribute-init change for a set type attribute */
   ChangeAttributeInit.set({
@@ -259,20 +240,18 @@ class ChangeAttributeInit extends AttributeChange {
     required String itemID,
     required String attributeKey,
   }) : super(
-      changeType: ChangeType.ATTRIBUTE_INIT,
-      changeApplicationDepth: changeApplicationDepth,
-      itemID: itemID,
-      attributeType: AttributeType.SET,
-      attributeKey: attributeKey,
-      value: [],
-      changeTimePosix: 0,
-    );
+          changeType: ChangeType.ATTRIBUTE_INIT,
+          changeApplicationDepth: changeApplicationDepth,
+          itemID: itemID,
+          attributeType: AttributeType.SET,
+          attributeKey: attributeKey,
+          value: [],
+          changeTimePosix: 0,
+        );
 
   /** Loads an atribute-init change from a json. */
   ChangeAttributeInit.fromJson(dynamic json) : super.fromJson(json);
 }
-
-
 
 /** Attribute update types */
 abstract class ChangeAttributeUpdate extends AttributeChange {
@@ -284,15 +263,14 @@ abstract class ChangeAttributeUpdate extends AttributeChange {
     required AttributeType attributeType,
     required String attributeKey,
     required dynamic value,
-  })
-    : super(
-      changeType: changeType,
-      changeApplicationDepth: changeApplicationDepth,
-      itemID: itemID,
-      attributeType: attributeType,
-      attributeKey: attributeKey,
-      value: value,
-    );
+  }) : super(
+          changeType: changeType,
+          changeApplicationDepth: changeApplicationDepth,
+          itemID: itemID,
+          attributeType: attributeType,
+          attributeKey: attributeKey,
+          value: value,
+        );
 
   /** Loads an atribute update change from a json. */
   ChangeAttributeUpdate.fromJson(dynamic json) : super.fromJson(json);
@@ -307,13 +285,13 @@ class ChangeAttributeSetValue extends ChangeAttributeUpdate {
     required String attributeKey,
     required dynamic value,
   }) : super(
-      changeType: ChangeType.ATTRIBUTE_SET_VALUE,
-      changeApplicationDepth: changeApplicationDepth,
-      itemID: itemID,
-      attributeType: AttributeType.PROPERTY,
-      attributeKey: attributeKey,
-      value: value,
-    );
+          changeType: ChangeType.ATTRIBUTE_SET_VALUE,
+          changeApplicationDepth: changeApplicationDepth,
+          itemID: itemID,
+          attributeType: AttributeType.PROPERTY,
+          attributeKey: attributeKey,
+          value: value,
+        );
 
   /** Loads a set value change from a json. */
   ChangeAttributeSetValue.fromJson(dynamic json) : super.fromJson(json);
@@ -328,13 +306,13 @@ class ChangeAttributeAddValue extends ChangeAttributeUpdate {
     required String attributeKey,
     required dynamic value,
   }) : super(
-      changeType: ChangeType.ATTRIBUTE_ADD_VALUE,
-      changeApplicationDepth: changeApplicationDepth,
-      itemID: itemID,
-      attributeType: AttributeType.SET,
-      attributeKey: attributeKey,
-      value: value,
-    );
+          changeType: ChangeType.ATTRIBUTE_ADD_VALUE,
+          changeApplicationDepth: changeApplicationDepth,
+          itemID: itemID,
+          attributeType: AttributeType.SET,
+          attributeKey: attributeKey,
+          value: value,
+        );
 
   /** Loads an add value change from a json. */
   ChangeAttributeAddValue.fromJson(dynamic json) : super.fromJson(json);
@@ -349,13 +327,13 @@ class ChangeAttributeRemoveValue extends ChangeAttributeUpdate {
     required String attributeKey,
     required dynamic value,
   }) : super(
-      changeType: ChangeType.ATTRIBUTE_REMOVE_VALUE,
-      changeApplicationDepth: changeApplicationDepth,
-      itemID: itemID,
-      attributeType: AttributeType.SET,
-      attributeKey: attributeKey,
-      value: value,
-    );
+          changeType: ChangeType.ATTRIBUTE_REMOVE_VALUE,
+          changeApplicationDepth: changeApplicationDepth,
+          itemID: itemID,
+          attributeType: AttributeType.SET,
+          attributeKey: attributeKey,
+          value: value,
+        );
 
   /** Loads a remove value change from a json. */
   ChangeAttributeRemoveValue.fromJson(dynamic json) : super.fromJson(json);

@@ -1,8 +1,7 @@
 part of tke_item_store;
 
 // Provides a control pannel for an instance of an item attribute
-class AttributeItem<ItemClassType extends Item?> extends Attribute
-    implements Value<ItemClassType> {
+class AttributeItem<ItemClassType extends Item?> extends Attribute implements Value<ItemClassType> {
   /// Register witht he getter store
   late final String getterID = GetterStore.registerWithGetterStore(this);
 
@@ -19,16 +18,18 @@ class AttributeItem<ItemClassType extends Item?> extends Attribute
 
   // Changes to the attribute made through this class are considered local changes
   void set value(ItemClassType newValue) {
-    AllItemsManager.applyChangesIfRelevant(
-      changes: [
-        ChangeAttributeSetValue(
-          changeApplicationDepth: syncDepth,
-          itemID: _itemManager.value.itemID,
-          attributeKey: attributeKey,
-          value: newValue?.itemID.value,
-        ),
-      ],
-    );
+    if (newValue != null) {
+      AllItemsManager.applyChangesIfRelevant(
+        changes: [
+          ChangeAttributeSetValue(
+            changeApplicationDepth: syncDepth,
+            itemID: _itemManager.value.itemID,
+            attributeKey: attributeKey,
+            value: newValue.itemID.value,
+          ),
+        ],
+      );
+    }
   }
 
   @override
