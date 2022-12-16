@@ -38,8 +38,10 @@ abstract class Attribute {
     required Item itemClassInstance,
   })  : _itemManager = itemManager,
         this.syncDepth = (() {
-          if (syncDepth.index > itemClassInstance.maxSyncDepth.index) {
-            return itemClassInstance.maxSyncDepth;
+          final maxSyncDepthForItemType =
+              Item.getMaxSyncDepthForItemType(itemClassInstance.itemType);
+          if (syncDepth.index > maxSyncDepthForItemType.index) {
+            return maxSyncDepthForItemType;
           } else {
             return syncDepth;
           }

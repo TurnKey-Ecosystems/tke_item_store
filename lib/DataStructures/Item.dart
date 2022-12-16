@@ -4,7 +4,6 @@ part of tke_item_store;
 abstract class Item {
   // We can't require subtypes to provide an itemType, so this is the best we can do.
   String get itemType;
-  SyncDepth get maxSyncDepth => SyncDepth.CLOUD;
 
   ///
   static const String _CONTAINED_IN_DELIMITER = ".";
