@@ -63,7 +63,6 @@ class AttributeItemSet<ItemClassType extends Item> extends Attribute
   // This will setup a listener to delete all contents when the parent item is deleted
   void _listenToOnDeleteAndDeleteContents() {
     // Ensure a slot exists for this item
-    print("Initing _listenToOnDeleteAndDeleteContents for ${_itemManager.value.itemID}");
     final initItemId = _itemManager.value.itemID;
     final attributeInstanceForInitItem = attributeInstance.value;
     if (!_deleteContentsOnItemDeleteListeners.containsKey(initItemId)) {
@@ -75,10 +74,8 @@ class AttributeItemSet<ItemClassType extends Item> extends Attribute
         _deleteContentsOnItemDeleteListeners[initItemId]!;
     if (!onDeleteItemEntry.containsKey(attributeKey)) {
       onDeleteItemEntry[attributeKey] = () {
-        print("About to delete contents of ${attributeInstanceForInitItem.itemID} $attributeKey.");
         // Delete all of this sets contents
         for (final contentItemId in attributeInstanceForInitItem.getAllValuesAsSet<String>()) {
-          print("About to delete ${contentItemId}");
           getItemFromItemID(contentItemId).delete();
         }
 
