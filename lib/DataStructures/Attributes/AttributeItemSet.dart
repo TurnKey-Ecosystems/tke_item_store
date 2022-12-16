@@ -75,8 +75,9 @@ class AttributeItemSet<ItemClassType extends Item> extends Attribute
         _deleteContentsOnItemDeleteListeners[initItemId]!;
     if (!onDeleteItemEntry.containsKey(attributeKey)) {
       onDeleteItemEntry[attributeKey] = () {
+        print("About to delete contents of ${attributeInstanceForInitItem.itemID} $attributeKey.");
         // Delete all of this sets contents
-        for (final contentItemId in attributeInstance.value.getAllValuesAsSet<String>()) {
+        for (final contentItemId in attributeInstanceForInitItem.getAllValuesAsSet<String>()) {
           print("About to delete ${contentItemId}");
           getItemFromItemID(contentItemId).delete();
         }
