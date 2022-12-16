@@ -109,12 +109,11 @@ abstract class ChangeItemExistance extends Change {
   /** Creates a new item existance change. */
   ChangeItemExistance({
     required ChangeType changeType,
-    required SyncDepth changeApplicationDepth,
     required this.itemType,
     required String itemID,
   }) : super._(
           changeType: changeType,
-          changeApplicationDepth: changeApplicationDepth,
+          changeApplicationDepth: Item.getMaxSyncDepthForItemType(itemType),
           itemID: itemID,
         );
 
@@ -138,10 +137,8 @@ class ChangeItemCreation extends ChangeItemExistance {
   ChangeItemCreation({
     required String itemType,
     required String itemID,
-    required SyncDepth changeApplicationDepth,
   }) : super(
           changeType: ChangeType.ITEM_CREATION,
-          changeApplicationDepth: changeApplicationDepth,
           itemType: itemType,
           itemID: itemID,
         );
@@ -156,10 +153,8 @@ class ChangeItemDeletion extends ChangeItemExistance {
   ChangeItemDeletion({
     required String itemType,
     required String itemID,
-    required SyncDepth changeApplicationDepth,
   }) : super(
           changeType: ChangeType.ITEM_DELETION,
-          changeApplicationDepth: changeApplicationDepth,
           itemType: itemType,
           itemID: itemID,
         );

@@ -90,13 +90,10 @@ abstract class Item {
   }
 
   // This allows some setup to happen before attributes an instantiated.
-  static Value<String> _doFirstTimeSetUp({
-    required String itemType,
-  }) {
+  static Value<String> _doFirstTimeSetUp({required String itemType}) {
     Value<String> itemID = AllItemsManager.requestNewItemID(itemType: itemType).v;
     AllItemsManager.applyChangesIfRelevant(changes: [
       ChangeItemCreation(
-        changeApplicationDepth: SyncDepth.CLOUD,
         itemType: itemType,
         itemID: itemID.value,
       ),
@@ -125,6 +122,16 @@ abstract class Item {
     });
   }
 
+  // Allows us to set the max syncDepth for an item.
+  static Map<String, SyncDepth> _maxSyncDepthByItemType = {};
+  static void setMaxSyncDepthForItemType({
+    required String itemType,
+    required SyncDepth maxSyncDepth,
+  }) =>
+      _maxSyncDepthByItemType[itemType] = maxSyncDepth;
+  static SyncDepth getMaxSyncDepthForItemType(String itemType) =>
+      _maxSyncDepthByItemType[itemType] ?? SyncDepth.CLOUD;
+
   /** Sets up all the attributes in this item */
   /*void _connectAttributesToAttributeInstances() {
     for (Attribute attribute in _getAllAttributes()) {
@@ -143,7 +150,6 @@ abstract class Item {
       ChangeItemDeletion(
         itemType: itemType,
         itemID: itemID.value,
-        changeApplicationDepth: SyncDepth.CLOUD,
       ),
     );
 
