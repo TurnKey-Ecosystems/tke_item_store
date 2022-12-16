@@ -8,14 +8,12 @@ abstract class Attribute {
   late final Getter<InstanceOfAttribute> attributeInstance = Computed(
     () {
       // Ensure that an instance of this attribute exists
-      if (_itemManager.value.getAttributeInstance(attributeKey: attributeKey) ==
-          null) {
+      if (_itemManager.value.getAttributeInstance(attributeKey: attributeKey) == null) {
         AllItemsManager.applyChangesIfRelevant(changes: [
           getAttributeInitChange(itemID: _itemManager.value.itemID),
         ]);
       }
-      return _itemManager.value
-          .getAttributeInstance(attributeKey: attributeKey)!;
+      return _itemManager.value.getAttributeInstance(attributeKey: attributeKey)!;
     },
     recomputeTriggers: [
       _itemManager.onAfterChange,
@@ -35,10 +33,17 @@ abstract class Attribute {
   // Create a new control panel for an attribute instance
   Attribute({
     required this.attributeKey,
-    required this.syncDepth,
+    required SyncDepth syncDepth,
     required Getter<SingleItemManager> itemManager,
     required Item itemClassInstance,
-  }) : _itemManager = itemManager {
+  })  : _itemManager = itemManager,
+        this.syncDepth = (() {
+          if (syncDepth.index > itemClassInstance.maxSyncDepth.index) {
+            return itemClassInstance.maxSyncDepth;
+          } else {
+            return syncDepth;
+          }
+        }()) {
     // This is scrappy, but since it's associated with the calss it should be okay for now
     itemClassInstance._allDevDefinedAttributes.add(this);
 
@@ -69,15 +74,13 @@ abstract class Attribute {
 
   // An attribute has a unique attributeKey within its assocaited item.
   @override
-  int get hashCode =>
-      Quiver.hash2(_itemManager.value.itemID.hashCode, attributeKey.hashCode);
+  int get hashCode => Quiver.hash2(_itemManager.value.itemID.hashCode, attributeKey.hashCode);
 
   // An attribute has a unique attributeKey within its assocaited item.
   @override
   bool operator ==(dynamic other) {
     return other is Attribute &&
-        other._itemManager.value.itemID.hashCode ==
-            _itemManager.value.itemID.hashCode &&
+        other._itemManager.value.itemID.hashCode == _itemManager.value.itemID.hashCode &&
         other.attributeKey.hashCode == attributeKey.hashCode;
   }
 }
