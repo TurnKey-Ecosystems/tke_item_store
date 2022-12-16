@@ -63,24 +63,26 @@ class AttributeItemSet<ItemClassType extends Item> extends Attribute
   // This will setup a listener to delete all contents when the parent item is deleted
   void _listenToOnDeleteAndDeleteContents() {
     // Ensure a slot exists for this item
-    if (!_deleteContentsOnItemDeleteListeners.containsKey(_itemManager.value.itemID)) {
-      _deleteContentsOnItemDeleteListeners[_itemManager.value.itemID] = {};
+    final initItemId = _itemManager.value.itemID;
+    final attributeInstanceForInitItem = attributeInstance.value;
+    if (!_deleteContentsOnItemDeleteListeners.containsKey(initItemId)) {
+      _deleteContentsOnItemDeleteListeners[initItemId] = {};
     }
 
     // Add a listenner if there is none for this attribute
     Map<String, void Function()> onDeleteItemEntry =
-        _deleteContentsOnItemDeleteListeners[_itemManager.value.itemID]!;
+        _deleteContentsOnItemDeleteListeners[initItemId]!;
     if (!onDeleteItemEntry.containsKey(attributeKey)) {
       onDeleteItemEntry[attributeKey] = () {
         // Delete all of this sets contents
-        for (Getter<ItemClassType> item in value) {
-          item.value.delete();
+        for (final contentItemId in attributeInstance.value.getAllValuesAsSet<String>()) {
+          getItemFromItemID(contentItemId).delete();
         }
 
         // The item will be deleted, so their is no sense is listening any more
         onDeleteItemEntry.remove(attributeKey);
       };
-      AllItemsManager.getItemInstance(_itemManager.value.itemID)!
+      AllItemsManager.getItemInstance(initItemId)!
           .onDelete
           .addListener(onDeleteItemEntry[attributeKey]);
     }
