@@ -3,7 +3,6 @@ library tke_item_store;
 // Imports
 import 'dart:async' as D_Async;
 import 'dart:collection' as D_Collections;
-import 'dart:html';
 import 'dart:io' as D_IO;
 import 'dart:convert' as D_Convert;
 import 'dart:developer' as D_Dev;
