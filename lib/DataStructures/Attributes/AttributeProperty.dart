@@ -1,8 +1,7 @@
 part of tke_item_store;
 
 // Provides a control pannel for an instance of a property type attribute
-abstract class _AttributeProperty<PropertyType> extends Attribute
-    implements Value<PropertyType> {
+abstract class _AttributeProperty<PropertyType> extends Attribute implements Value<PropertyType> {
   /// Register witht he getter store
   late final String getterID = GetterStore.registerWithGetterStore(this);
 
@@ -49,7 +48,7 @@ abstract class _AttributeProperty<PropertyType> extends Attribute
   // Creates a new property attribute
   _AttributeProperty({
     required String attributeKey,
-    required SyncDepth syncDepth,
+    SyncDepth? syncDepth,
     required this.valueOnCreateNew,
     required Getter<SingleItemManager> itemManager,
     required Item itemClassInstance,
@@ -84,7 +83,7 @@ abstract class _AttributeProperty<PropertyType> extends Attribute
 class AttributeBool extends _AttributeProperty<bool> {
   AttributeBool({
     required String attributeKey,
-    required SyncDepth syncDepth,
+    SyncDepth? syncDepth,
     required bool valueOnCreateNew,
     required Getter<SingleItemManager> itemManager,
     required Item itemClassInstance,
@@ -101,7 +100,7 @@ class AttributeBool extends _AttributeProperty<bool> {
 class AttributeInt extends _AttributeProperty<int> {
   AttributeInt({
     required String attributeKey,
-    required SyncDepth syncDepth,
+    SyncDepth? syncDepth,
     required int valueOnCreateNew,
     required Getter<SingleItemManager> itemManager,
     required Item itemClassInstance,
@@ -118,7 +117,7 @@ class AttributeInt extends _AttributeProperty<int> {
 class AttributeDouble extends _AttributeProperty<double> {
   AttributeDouble({
     required String attributeKey,
-    required SyncDepth syncDepth,
+    SyncDepth? syncDepth,
     required double valueOnCreateNew,
     required Getter<SingleItemManager> itemManager,
     required Item itemClassInstance,
@@ -135,7 +134,7 @@ class AttributeDouble extends _AttributeProperty<double> {
 class AttributeString extends _AttributeProperty<String> {
   AttributeString({
     required String attributeKey,
-    required SyncDepth syncDepth,
+    SyncDepth? syncDepth,
     required String valueOnCreateNew,
     required Getter<SingleItemManager> itemManager,
     required Item itemClassInstance,
@@ -149,8 +148,7 @@ class AttributeString extends _AttributeProperty<String> {
 }
 
 // Provides a control pannel for an instance of a session exlusive object attribute
-class AttributeSessionObject<ObjectType>
-    extends _AttributeProperty<ObjectType> {
+class AttributeSessionObject<ObjectType> extends _AttributeProperty<ObjectType> {
   AttributeSessionObject({
     required String attributeKey,
     required ObjectType valueOnCreateNew,

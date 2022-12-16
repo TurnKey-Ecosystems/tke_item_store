@@ -44,7 +44,7 @@ class AttributeStringSet extends Attribute {
   // Creates a new attribute item set
   AttributeStringSet({
     required String attributeKey,
-    required SyncDepth syncDepth,
+    SyncDepth? syncDepth,
     required Getter<SingleItemManager> itemManager,
     required Item itemClassInstance,
   }) : super(

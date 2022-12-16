@@ -48,7 +48,7 @@ class AttributeItem<ItemClassType extends Item?> extends Attribute implements Va
   // Creates a new property attribute
   AttributeItem({
     required String attributeKey,
-    required SyncDepth syncDepth,
+    SyncDepth? syncDepth,
     required this.getDefaultItemOnCreateNew,
     required this.getItemFromItemID,
     required Getter<SingleItemManager> itemManager,

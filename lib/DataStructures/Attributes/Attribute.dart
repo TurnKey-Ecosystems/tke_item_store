@@ -33,17 +33,21 @@ abstract class Attribute {
   // Create a new control panel for an attribute instance
   Attribute({
     required this.attributeKey,
-    required SyncDepth syncDepth,
+    required SyncDepth? syncDepth,
     required Getter<SingleItemManager> itemManager,
     required Item itemClassInstance,
   })  : _itemManager = itemManager,
         this.syncDepth = (() {
           final maxSyncDepthForItemType =
               Item.getMaxSyncDepthForItemType(itemClassInstance.itemType);
-          if (syncDepth.index > maxSyncDepthForItemType.index) {
+          if (syncDepth == null) {
             return maxSyncDepthForItemType;
           } else {
-            return syncDepth;
+            if (syncDepth.index > maxSyncDepthForItemType.index) {
+              return maxSyncDepthForItemType;
+            } else {
+              return syncDepth;
+            }
           }
         }()) {
     // This is scrappy, but since it's associated with the calss it should be okay for now

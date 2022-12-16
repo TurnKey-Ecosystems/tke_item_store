@@ -91,7 +91,7 @@ class AttributeItemSet<ItemClassType extends Item> extends Attribute
   // Creates a new attribute item set
   AttributeItemSet({
     required String attributeKey,
-    required SyncDepth syncDepth,
+    SyncDepth? syncDepth,
     required this.getItemFromItemID,
     required this.shouldDeleteContentsWhenItemIsDeleted,
     required Getter<SingleItemManager> itemManager,
