@@ -151,6 +151,7 @@ abstract class AllItemsManager {
     Map<String, List<ChangeAttributeInit>> attributeInitChanges = {};
     List<ChangeAttributeUpdate> attributeUpdateChanges = [];
     for (Change change in changes) {
+      print("Proccessing some type of change on item \"${change.itemID}\".");
       switch (change.changeType) {
         // Add to the item creation changes collection
         case ChangeType.ITEM_CREATION:
