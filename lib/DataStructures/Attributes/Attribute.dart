@@ -8,7 +8,9 @@ abstract class Attribute {
   late final Getter<InstanceOfAttribute> attributeInstance = Computed(
     () {
       // Ensure that an instance of this attribute exists
+      print("Checking \"${attributeKey}\" of \"${_itemManager.value.itemID}\"");
       if (_itemManager.value.getAttributeInstance(attributeKey: attributeKey) == null) {
+        print("Initializing \"${attributeKey}\" of \"${_itemManager.value.itemID}\"");
         AllItemsManager.applyChangesIfRelevant(changes: [
           getAttributeInitChange(itemID: _itemManager.value.itemID),
         ]);
@@ -50,13 +52,6 @@ abstract class Attribute {
             }
           }
         }()) {
-    if (_itemManager.value.getAttributeInstance(attributeKey: attributeKey) == null) {
-      print("Initializing \"${attributeKey}\" of \"${_itemManager.value.itemID}\"");
-      AllItemsManager.applyChangesIfRelevant(changes: [
-        getAttributeInitChange(itemID: _itemManager.value.itemID),
-      ]);
-    }
-
     // This is scrappy, but since it's associated with the calss it should be okay for now
     itemClassInstance._allDevDefinedAttributes.add(this);
 
