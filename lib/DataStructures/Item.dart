@@ -142,6 +142,8 @@ abstract class Item {
     List<Change> changes = [];
 
     // Delete this item.
+    print(
+        "Deleting: \"${itemID.value}\" of \"${itemManager.value.itemType}\" at \"${Item.getMaxSyncDepthForItemType(itemManager.value.itemType)}\"");
     changes.add(
       ChangeItemDeletion(
         itemType: itemManager.value.itemType,
@@ -159,7 +161,7 @@ abstract class Item {
           itemID: containingItemID,
           attributeKey: containingSetKey,
           value: itemID.value,
-          changeApplicationDepth: SyncDepth.CLOUD,
+          changeApplicationDepth: Item.getMaxSyncDepthForItemType(itemManager.value.itemType),
         ),
       );
     }
