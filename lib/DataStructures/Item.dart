@@ -108,6 +108,7 @@ abstract class Item {
     this._oldItemID.value = itemID.value;
     itemManager.value.onDelete.addListener(onDelete.trigger);
     this.itemID.onAfterChange.addListener(() {
+      print("Swapping listening from \"${_oldItemID.value}\" to \"${itemID.value}\"");
       // Stop listening to the old item instance
       AllItemsManager.getItemInstance(_oldItemID.value)?.onDelete.removeListener(onDelete.trigger);
       _oldItemID.value = itemID.value;

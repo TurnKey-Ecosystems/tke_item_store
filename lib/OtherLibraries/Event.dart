@@ -96,6 +96,8 @@ class Event {
   }
 
   void trigger() {
+    //final coppiedListeners = <Function?>[];
+    //listeners.forEach((x) => coppiedListeners.add(x));
     _trigger(listeners, shouldLog);
   }
 
@@ -142,6 +144,5 @@ extension on Function() {
     _subscriptionsByFunctionHashcode[hashcode]!.add(event);
   }
 
-  List<Event?> get subscriptions =>
-      _subscriptionsByFunctionHashcode[this.hashCode] ?? [];
+  List<Event?> get subscriptions => _subscriptionsByFunctionHashcode[this.hashCode] ?? [];
 }
