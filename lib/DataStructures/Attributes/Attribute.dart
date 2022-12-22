@@ -45,8 +45,9 @@ abstract class Attribute {
         this.syncDepth = (() {
           final maxSyncDepthForItemType =
               Item.getMaxSyncDepthForItemType(itemClassInstance.itemType);
-          print(
-              "SyncDepth of \"${itemManager.value.itemID}\" for \"${attributeKey}\" is \"${maxSyncDepthForItemType.toString()}\"");
+          if (itemManager.value.itemType == "TaxYearData")
+            print(
+                "SyncDepth of \"${itemManager.value.itemID}\" for \"${attributeKey}\" is \"${maxSyncDepthForItemType.toString()}\"");
           if (syncDepth == null) {
             return maxSyncDepthForItemType;
           } else {
