@@ -2,9 +2,6 @@ part of tke_item_store;
 
 // Acts a a control pannel for an item instance
 abstract class Item {
-  // We can't require subtypes to provide an itemType, so this is the best we can do.
-  String get itemType;
-
   ///
   static const String _CONTAINED_IN_DELIMITER = ".";
 
@@ -147,7 +144,7 @@ abstract class Item {
     // Delete this item.
     changes.add(
       ChangeItemDeletion(
-        itemType: itemType,
+        itemType: itemManager.value.itemType,
         itemID: itemID.value,
       ),
     );

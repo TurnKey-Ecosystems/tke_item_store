@@ -8,12 +8,7 @@ abstract class Attribute {
   late final Getter<InstanceOfAttribute> attributeInstance = Computed(
     () {
       // Ensure that an instance of this attribute exists
-      if (_itemManager.value.itemType == "TaxYearData")
-        print("Checking \"${attributeKey}\" of \"${_itemManager.value.itemID}\"");
       if (_itemManager.value.getAttributeInstance(attributeKey: attributeKey) == null) {
-        if (_itemManager.value.itemType == "TaxYearData")
-          print(
-              "Initializing \"${attributeKey}\" of \"${_itemManager.value.itemID}\" to \"${syncDepth.toString()}\"");
         AllItemsManager.applyChangesIfRelevant(changes: [
           getAttributeInitChange(itemID: _itemManager.value.itemID),
         ]);
@@ -36,9 +31,6 @@ abstract class Attribute {
   final SyncDepth? _initSyncDepth;
   SyncDepth get syncDepth {
     final maxSyncDepthForItemType = Item.getMaxSyncDepthForItemType(_itemManager.value.itemType);
-    if (_itemManager.value.itemType == "TaxYearData")
-      print(
-          "SyncDepth of \"${_itemManager.value.itemID}\" of \"${_itemManager.value.itemType}\" for \"${attributeKey}\" is \"${maxSyncDepthForItemType.toString()}\"");
     if (_initSyncDepth == null) {
       return maxSyncDepthForItemType;
     } else {
