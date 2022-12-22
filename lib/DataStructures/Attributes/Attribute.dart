@@ -12,7 +12,8 @@ abstract class Attribute {
         print("Checking \"${attributeKey}\" of \"${_itemManager.value.itemID}\"");
       if (_itemManager.value.getAttributeInstance(attributeKey: attributeKey) == null) {
         if (_itemManager.value.itemType == "TaxYearData")
-          print("Initializing \"${attributeKey}\" of \"${_itemManager.value.itemID}\"");
+          print(
+              "Initializing \"${attributeKey}\" of \"${_itemManager.value.itemID}\" to \"${syncDepth.toString()}\"");
         AllItemsManager.applyChangesIfRelevant(changes: [
           getAttributeInitChange(itemID: _itemManager.value.itemID),
         ]);
