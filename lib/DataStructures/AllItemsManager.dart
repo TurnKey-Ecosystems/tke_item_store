@@ -254,13 +254,6 @@ abstract class AllItemsManager {
 
     // Apply any relevant item deletions
     for (ChangeItemDeletion change in itemDeletionChanges.values) {
-      for (final inst in _itemInstances.values) {
-        print("This item \"${change.itemID}\" of \"${change.itemType}\" other items:");
-        if (inst.itemType == change.itemType) {
-          print(inst.itemID);
-        }
-        print("");
-      }
       if (_itemInstances.containsKey(change.itemID)) {
         // Let listenners know that this item is being deleted
         print("About to call onDelete for \"${change.itemID}\" of \"${change.itemType}\"");
