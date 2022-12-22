@@ -328,7 +328,7 @@ class SingleItemManager {
   }
 
   /** This will be triggered when this item is deleted */
-  Event onDelete = Event();
+  Event onDelete = Event(shouldLog: true);
 
   /** Creates a new item */
   SingleItemManager._createNewItem({
