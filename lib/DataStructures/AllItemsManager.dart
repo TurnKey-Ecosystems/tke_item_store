@@ -277,8 +277,11 @@ abstract class AllItemsManager {
           _itemIDsForEachItemType[change.itemType]!.remove(change.itemID);
         }
 
+        print(
+            "Before getOnItemOfTypeCreatedOrDestroyedEvent().trigger() for \"${change.itemID}\" of \"${change.itemType}\"");
         // Trigger the item type deletion event
         getOnItemOfTypeCreatedOrDestroyedEvent(itemType: change.itemType).trigger();
+        print("Finished onDelete for \"${change.itemID}\" of \"${change.itemType}\"");
       }
     }
   }
