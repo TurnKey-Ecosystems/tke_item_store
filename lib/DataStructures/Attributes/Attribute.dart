@@ -51,6 +51,7 @@ abstract class Attribute {
           }
         }()) {
     if (_itemManager.value.getAttributeInstance(attributeKey: attributeKey) == null) {
+      print("Initializing \"${attributeKey}\" of \"${_itemManager.value.itemID}\"");
       AllItemsManager.applyChangesIfRelevant(changes: [
         getAttributeInitChange(itemID: _itemManager.value.itemID),
       ]);
