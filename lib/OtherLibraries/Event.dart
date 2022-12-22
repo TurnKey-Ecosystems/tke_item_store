@@ -18,6 +18,9 @@ class _EventTriggerWrapperChanging implements _EventTriggerWrapper {
     _triggerCount++;
     int nullListenerCount = 0;
     int listenerIndex = 0;
+    if (shouldLog) {
+      print('About to call listeners.');
+    }
     for (Function? listener in listeners) {
       if (shouldLog) {
         print('Event - ${listenerIndex} - About to call ${listener.hashCode}');
@@ -36,6 +39,9 @@ class _EventTriggerWrapperChanging implements _EventTriggerWrapper {
         print('Event - listener count ${listeners.length}');
       }
       listenerIndex++;
+    }
+    if (shouldLog) {
+      print('Finished calling listeners.');
     }
     for (; nullListenerCount > 0; nullListenerCount--) {
       listeners.remove(null);
