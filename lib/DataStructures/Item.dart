@@ -8,7 +8,6 @@ abstract class Item {
   /// These are the attribute item sets that contain this item
   late final AttributeStringSet _containedIn = AttributeStringSet(
     attributeKey: "tfc_containedIn",
-    syncDepth: SyncDepth.CLOUD,
     itemManager: itemManager,
     itemClassInstance: this,
   );
