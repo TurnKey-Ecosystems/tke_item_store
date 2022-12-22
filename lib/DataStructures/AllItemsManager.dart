@@ -255,6 +255,7 @@ abstract class AllItemsManager {
     for (ChangeItemDeletion change in itemDeletionChanges.values) {
       if (_itemInstances.containsKey(change.itemID)) {
         // Let listenners know that this item is being deleted
+        print("About to call onDelete for \"${change.itemID}\" of \"${change.itemType}\"");
         _itemInstances[change.itemID]!.onDelete.trigger();
 
         // Commit this change
