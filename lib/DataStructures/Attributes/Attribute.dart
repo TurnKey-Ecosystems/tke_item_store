@@ -8,9 +8,11 @@ abstract class Attribute {
   late final Getter<InstanceOfAttribute> attributeInstance = Computed(
     () {
       // Ensure that an instance of this attribute exists
-      print("Checking \"${attributeKey}\" of \"${_itemManager.value.itemID}\"");
+      if (_itemManager.value.itemType == "TaxYearData")
+        print("Checking \"${attributeKey}\" of \"${_itemManager.value.itemID}\"");
       if (_itemManager.value.getAttributeInstance(attributeKey: attributeKey) == null) {
-        print("Initializing \"${attributeKey}\" of \"${_itemManager.value.itemID}\"");
+        if (_itemManager.value.itemType == "TaxYearData")
+          print("Initializing \"${attributeKey}\" of \"${_itemManager.value.itemID}\"");
         AllItemsManager.applyChangesIfRelevant(changes: [
           getAttributeInitChange(itemID: _itemManager.value.itemID),
         ]);
