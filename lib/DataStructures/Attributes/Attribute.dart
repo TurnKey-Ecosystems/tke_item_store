@@ -33,7 +33,22 @@ abstract class Attribute {
   final String attributeKey;
 
   // This is mainly used for storing the syncDepth while the attribute is being initialized
-  final SyncDepth syncDepth;
+  final SyncDepth? _initSyncDepth;
+  SyncDepth get syncDepth {
+    final maxSyncDepthForItemType = Item.getMaxSyncDepthForItemType(_itemManager.value.itemType);
+    if (_itemManager.value.itemType == "TaxYearData")
+      print(
+          "SyncDepth of \"${_itemManager.value.itemID}\" of \"${_itemManager.value.itemType}\" for \"${attributeKey}\" is \"${maxSyncDepthForItemType.toString()}\"");
+    if (_initSyncDepth == null) {
+      return maxSyncDepthForItemType;
+    } else {
+      if (_initSyncDepth!.index > maxSyncDepthForItemType.index) {
+        return maxSyncDepthForItemType;
+      } else {
+        return _initSyncDepth!;
+      }
+    }
+  }
 
   // Create a new control panel for an attribute instance
   Attribute({
@@ -42,22 +57,7 @@ abstract class Attribute {
     required Getter<SingleItemManager> itemManager,
     required Item itemClassInstance,
   })  : _itemManager = itemManager,
-        this.syncDepth = (() {
-          final maxSyncDepthForItemType =
-              Item.getMaxSyncDepthForItemType(itemManager.value.itemType);
-          if (itemManager.value.itemType == "TaxYearData")
-            print(
-                "SyncDepth of \"${itemManager.value.itemID}\" of \"${itemManager.value.itemType}\" for \"${attributeKey}\" is \"${maxSyncDepthForItemType.toString()}\"");
-          if (syncDepth == null) {
-            return maxSyncDepthForItemType;
-          } else {
-            if (syncDepth.index > maxSyncDepthForItemType.index) {
-              return maxSyncDepthForItemType;
-            } else {
-              return syncDepth;
-            }
-          }
-        }()) {
+        this._initSyncDepth = syncDepth {
     // This is scrappy, but since it's associated with the calss it should be okay for now
     itemClassInstance._allDevDefinedAttributes.add(this);
 
