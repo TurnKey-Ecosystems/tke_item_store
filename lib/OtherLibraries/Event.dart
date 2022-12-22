@@ -80,7 +80,7 @@ class Event {
           listeners.add(listener);
           listener();
         }();
-        print('Delaying adding listener ${listener.hashCode}!');
+        if (shouldLog) print('Delaying adding listener ${listener.hashCode}!');
       } else {
         listeners.add(listener);
       }

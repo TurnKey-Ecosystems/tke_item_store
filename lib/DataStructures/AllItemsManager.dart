@@ -151,7 +151,7 @@ abstract class AllItemsManager {
     Map<String, List<ChangeAttributeInit>> attributeInitChanges = {};
     List<ChangeAttributeUpdate> attributeUpdateChanges = [];
     for (Change change in changes) {
-      print("Proccessing some type of change on item \"${change.itemID}\".");
+      //print("Proccessing some type of change on item \"${change.itemID}\".");
       switch (change.changeType) {
         // Add to the item creation changes collection
         case ChangeType.ITEM_CREATION:
@@ -256,7 +256,7 @@ abstract class AllItemsManager {
     for (ChangeItemDeletion change in itemDeletionChanges.values) {
       if (_itemInstances.containsKey(change.itemID)) {
         // Let listenners know that this item is being deleted
-        print("About to call onDelete for \"${change.itemID}\" of \"${change.itemType}\"");
+        //print("About to call onDelete for \"${change.itemID}\" of \"${change.itemType}\"");
         _itemInstances[change.itemID]!.onDelete.trigger();
 
         // Commit this change
@@ -277,11 +277,10 @@ abstract class AllItemsManager {
           _itemIDsForEachItemType[change.itemType]!.remove(change.itemID);
         }
 
-        print(
-            "Before getOnItemOfTypeCreatedOrDestroyedEvent().trigger() for \"${change.itemID}\" of \"${change.itemType}\"");
+        //print("Before getOnItemOfTypeCreatedOrDestroyedEvent().trigger() for \"${change.itemID}\" of \"${change.itemType}\"");
         // Trigger the item type deletion event
         getOnItemOfTypeCreatedOrDestroyedEvent(itemType: change.itemType).trigger();
-        print("Finished onDelete for \"${change.itemID}\" of \"${change.itemType}\"");
+        //print("Finished onDelete for \"${change.itemID}\" of \"${change.itemType}\"");
       }
     }
   }
@@ -328,7 +327,7 @@ class SingleItemManager {
   }
 
   /** This will be triggered when this item is deleted */
-  Event onDelete = Event(shouldLog: true);
+  Event onDelete = Event();
 
   /** Creates a new item */
   SingleItemManager._createNewItem({
